@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    @font-face {
+        font-family: sunflower;
+        src: url(./assets/fonts/Sunflower-Light.ttf) format('truetype');
+        font-weight: 300;
+    }
+
+    @font-face {
+        font-family: sunflower;
+        src: url(./assets/fonts/Sunflower-Medium.ttf) format('truetype');
+        font-weight: 500;
+    }
+
+    @font-face {
+        font-family: sunflower;
+        src: url(./assets/fonts/Sunflower-Bold.ttf) format('truetype');
+        font-weight: 700;
+    }
+
+    html, body {
+        height: 100vh;
+        background: #333;
+        color: white;
+        font-family: 'sunflower', sans-serif;
+        font-weight: 300;
+    }
+}
