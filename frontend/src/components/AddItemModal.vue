@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, toRefs } from 'vue';
+import { Ref, Transition, ref, toRefs } from 'vue';
 import Dialog from './ui/Dialog.vue';
 import Input from './ui/Input.vue';
+import { Item } from '@/shared/types';
 
 const props = defineProps({
     isOpen: Boolean,
@@ -10,50 +11,32 @@ const props = defineProps({
 
 const { isOpen, selectedTabId } = toRefs(props)
 
-console.log(selectedTabId?.value)
-
 const emit = defineEmits(["addItem", "on-cancel"]);
 
-const description = ref('');
-const amount = ref(0);
-const category = ref('');
-
-const updateValue = (value: any, field: string) => {
-    switch (field) {
-        case 'description':
-            description.value = value;
-            break;
-        case 'amount':
-            amount.value = value;
-            break;
-        case 'category':
-            category.value = value;
-            break;
-        default:
-            break;
-    }
-};
+const formData: Ref<Item> = ref({
+    description: '',
+    amount: undefined as unknown as number,
+    category: '',
+})
 
 function onSubmit(): void {
-    console.log(description.value, amount.value, category.value)
-    emit("addItem", description.value, amount.value, category.value);
+    formData.value.amount = Number(formData.value.amount);
+    emit("addItem", formData.value);
 }
 
 </script>
 
 <template>
-    <div v-if="isOpen" class="fixed z-50">
-        <Dialog>
-            <div class="flex flex-col gap-4">
-                <h1 class="text-2xl">Add {{ selectedTabId === 1 ? 'earning' : 'expense' }}</h1>
-                <Input @input="updateValue($event.target.value, 'description')" name="description" title="Description" type="text" v-model="description" />
-                <Input @input="updateValue($event.target.value, 'amount')" name="amount" title="Amount" type="number" v-model="amount" />
-                <Input @input="updateValue($event.target.value, 'category')" v-if="selectedTabId === 2" name="category" title="Category" type="text" v-model="category" />
-                <div class="flex gap-4">
-                    <button @click="$emit('on-cancel')" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
-                    <button @click="onSubmit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add</button>
-                </div>
+    <Dialog :isOpen="isOpen">
+        <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
+            <h1 class="text-2xl">Add {{ selectedTabId === 1 ? 'earning' : 'expense' }}</h1>
+            <Input :required="true" :name="'description'" :title="'Description'" :type="'text'" :model-value="formData.description" @update:model-value="newValue => formData.description = newValue" />
+            <Input :required="true" :name="'amount'" :title="'Amount'" :type="'number'" :model-value="formData.amount" @update:model-value="newValue => formData.amount = newValue" />
+            <Input :required="true" v-if="selectedTabId === 2" :name="'category'" :title="'Category'" :type="'text'" :model-value="formData.category" @update:model-value="newValue => formData.category = newValue" />
+            <div class="flex gap-4">
+                <button @click="$emit('on-cancel')" type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add</button>
             </div>
-        </Dialog>
-    </div>
+        </form>
+    </Dialog>
 </template>

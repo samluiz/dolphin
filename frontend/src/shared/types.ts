@@ -16,3 +16,9 @@ export interface EarningInput {
 export interface ExpenseInput extends EarningInput {
     category: string
 }
+
+export interface Item {
+    description: string
+    amount: number
+    category?: string
+}
