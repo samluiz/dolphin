@@ -1,24 +1,24 @@
 export interface Earning {
-    id: number
-    description: string
-    amount: number
+  id: number;
+  description: string;
+  amount: number;
 }
 
 export interface Expense extends Earning {
-    category: string
+  category: string;
 }
 
 export interface EarningInput {
-    description: string
-    amount: number
+  description: string;
+  amount: number;
 }
 
 export interface ExpenseInput extends EarningInput {
-    category: string
+  category: string;
 }
 
 export interface Item {
-    description: string
-    amount: number
-    category?: string
+  description: string;
+  amount: number;
+  category?: string;
 }

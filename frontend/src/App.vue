@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import Table from './components/Table.vue';
-
+import Table from "./components/Table.vue";
 </script>
 
 <template>
@@ -11,4 +10,3 @@ import Table from './components/Table.vue';
     <Table />
   </div>
 </template>
-

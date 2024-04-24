@@ -19,3 +19,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
+
+// shutdown is called when the app is shutting down
+func (a *App) shutdown(ctx context.Context) {
+}
