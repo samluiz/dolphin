@@ -68,7 +68,21 @@ jobs:
         wails build -platform linux/amd64
         mv ./build/bin/fintrack ./build/bin/Fintrack_Linux_Amd64
 
+    - name: Upload Windows/amd64 binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fintrack_Windows_Amd64
+        path: ./build/bin/Fintrack_Windows_Amd64.exe
+
+    - name: Upload Linux/amd64 binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fintrack_Linux_Amd64
+        path: ./build/bin/Fintrack_Linux_Amd64
+
   create-release:
+    environment: 
+        name: release
     runs-on: ubuntu-latest
     needs:
       - build-macos
@@ -83,13 +97,23 @@ jobs:
       with:
         name: Fintrack_MacOS_Amd64
 
+    - name: Download Windows amd64 binary
+      uses: actions/download-artifact@v4
+      with:
+        name: Fintrack_Windows_Amd64
+
+    - name: Download Linux amd64 binary
+      uses: actions/download-artifact@v4
+      with:
+        name: Fintrack_Linux_Amd64
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v2
       with:
         files: |
           ./Fintrack_MacOS_Amd64
-          ./build/bin/Fintrack_Windows_Amd64.exe
-          ./build/bin/Fintrack_Linux_Amd64
+          ./Fintrack_Windows_Amd64.exe
+          ./Fintrack_Linux_Amd64
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
