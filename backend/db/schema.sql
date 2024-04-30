@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    description TEXT UNIQUE
+    description TEXT UNIQUE,
+    is_default BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS categories (

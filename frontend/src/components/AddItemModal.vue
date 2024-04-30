@@ -62,6 +62,7 @@ function onSubmit(): void {
         @update:model-value="(newValue) => (formData.description = newValue)"
       />
       <Input
+        :step="0.01"
         :required="true"
         :name="'amount'"
         :title="'Amount'"
