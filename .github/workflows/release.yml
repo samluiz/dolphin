@@ -15,6 +15,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install C packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev
+
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
