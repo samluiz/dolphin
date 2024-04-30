@@ -29,10 +29,11 @@ jobs:
         wails build -platform windows
         mv ./build/bin/fintrack.exe ./build/bin/fintrack-win.exe
 
-    - name: Build for macOS
-      run: |
-        wails build -platform darwin
-        mv ./build/bin/fintrack ./build/bin/fintrack-macos
+    # THIS OPTION CURRENTLY DOES NOT WORK
+    # - name: Build for macOS
+    #   run: |
+    #     wails build -platform darwin
+    #     mv ./build/bin/fintrack ./build/bin/fintrack-macos
 
     - name: Build for Linux
       run: |
@@ -45,7 +46,6 @@ jobs:
       with:
         files: |
           ./build/bin/fintrack-win.exe
-          ./build/bin/fintrack-macos
           ./build/bin/fintrack-linux
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
