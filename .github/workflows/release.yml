@@ -26,17 +26,17 @@ jobs:
 
     - name: Build for Windows
       run: |
-        wails build -p windows
+        wails build -platform windows
         mv ./build/fintrack.exe ./build/fintrack-win.exe
 
     - name: Build for macOS
       run: |
-        wails build -p darwin
+        wails build -platform darwin
         mv ./build/fintrack ./build/fintrack-macos
 
     - name: Build for Linux
       run: |
-        wails build -p linux
+        wails build -platform linux
         mv ./build/fintrack ./build/fintrack-linux
 
     - name: Create Release
