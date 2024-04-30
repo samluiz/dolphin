@@ -1,0 +1,59 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    environment: 
+        name: release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Install Wails CLI
+      run: |
+        go install github.com/wailsapp/wails/cmd/wails@latest
+
+    - name: Build for Windows
+      run: |
+        wails build -p windows
+        mv ./build/fintrack.exe ./build/fintrack-win.exe
+
+    - name: Build for macOS
+      run: |
+        wails build -p darwin
+        mv ./build/fintrack ./build/fintrack-macos
+
+    - name: Build for Linux
+      run: |
+        wails build -p linux
+        mv ./build/fintrack ./build/fintrack-linux
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          ./build/fintrack-win.exe
+          ./build/fintrack-macos
+          ./build/fintrack-linux
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Get Release ID
+      id: get_release_id
+      run: echo "::set-output name=release_id::$(echo ${{ steps.create_release.outputs.release_id }})"
+
+    - name: Get Release Tag
+      id: get_release_tag
+      run: echo "::set-output name=release_tag::$(echo ${{ steps.create_release.outputs.tag }})"
