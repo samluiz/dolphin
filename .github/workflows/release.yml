@@ -27,26 +27,26 @@ jobs:
     - name: Build for Windows
       run: |
         wails build -platform windows
-        mv ./build/fintrack.exe ./build/fintrack-win.exe
+        mv ./build/bin/fintrack.exe ./build/bin/fintrack-win.exe
 
     - name: Build for macOS
       run: |
         wails build -platform darwin
-        mv ./build/fintrack ./build/fintrack-macos
+        mv ./build/bin/fintrack ./build/bin/fintrack-macos
 
     - name: Build for Linux
       run: |
         wails build -platform linux
-        mv ./build/fintrack ./build/fintrack-linux
+        mv ./build/bin/fintrack ./build/bin/fintrack-linux
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./build/fintrack-win.exe
-          ./build/fintrack-macos
-          ./build/fintrack-linux
+          ./build/bin/fintrack-win.exe
+          ./build/bin/fintrack-macos
+          ./build/bin/fintrack-linux
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
