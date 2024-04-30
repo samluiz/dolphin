@@ -15,10 +15,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        xcode-select --install
-
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
