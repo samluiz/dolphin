@@ -6,7 +6,38 @@ on:
       - "*"
 
 jobs:
-  build:
+  build-macos:
+    environment: 
+        name: release
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install C packages
+      run: |
+        brew install gtk+3 webkit2gtk
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Install Wails CLI
+      run: |
+        go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+    - name: Build for macOS/arm64
+      run: |
+        wails build -platform darwin/arm64
+        mv ./build/bin/fintrack ./build/bin/Fintrack_MacOS_Arm64
+
+    - name: Build for macOS/amd64
+      run: |
+        wails build -platform darwin/amd64
+        mv ./build/bin/fintrack ./build/bin/Fintrack_MacOS_Amd64
+  build-windows-and-linux:
     environment: 
         name: release
     runs-on: ubuntu-latest
@@ -29,10 +60,15 @@ jobs:
       run: |
         go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-    - name: Build for Windows
+    - name: Build for Windows/arm64
       run: |
-        wails build -platform windows
-        mv ./build/bin/fintrack.exe ./build/bin/fintrack-win.exe
+        wails build -platform windows/arm64
+        mv ./build/bin/fintrack.exe ./build/bin/Fintrack_Windows_Arm64.exe
+
+    - name: Build for Windows/amd64
+      run: |
+        wails build -platform windows/amd64
+        mv ./build/bin/fintrack.exe ./build/bin/Fintrack_Windows_Amd64.exe
 
     # THIS OPTION CURRENTLY DOES NOT WORK
     # - name: Build for macOS
@@ -40,25 +76,22 @@ jobs:
     #     wails build -platform darwin
     #     mv ./build/bin/fintrack ./build/bin/fintrack-macos
 
-    - name: Build for Linux
+    - name: Build for Linux/arm64
       run: |
-        wails build -platform linux
-        mv ./build/bin/fintrack ./build/bin/fintrack-linux
+        wails build -platform linux/arm64
+        mv ./build/bin/fintrack ./build/bin/Fintrack_Linux_Arm64
+
+    - name: Build for Linux/amd64
+      run: |
+        wails build -platform linux/amd64
+        mv ./build/bin/fintrack ./build/bin/Fintrack_Linux_Amd64
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./build/bin/fintrack-win.exe
-          ./build/bin/fintrack-linux
+          ./build/bin/Fintrack_Windows.exe
+          ./build/bin/Fintrack_Linux.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-    - name: Get Release ID
-      id: get_release_id
-      run: echo "::set-output name=release_id::$(echo ${{ steps.create_release.outputs.release_id }})"
-
-    - name: Get Release Tag
-      id: get_release_tag
-      run: echo "::set-output name=release_tag::$(echo ${{ steps.create_release.outputs.tag }})"
