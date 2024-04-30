@@ -28,13 +28,7 @@ jobs:
       run: |
         wails build -platform darwin/amd64
         mv ./build/bin/fintrack ./build/bin/Fintrack_MacOS_Amd64
-
-    - name: Upload macOS arm64 binary
-      uses: actions/upload-artifact@v2
-      with:
-        name: Fintrack_MacOS_Arm64
-        path: ./build/bin/Fintrack_MacOS_Arm64
-
+        
     - name: Upload macOS amd64 binary
       uses: actions/upload-artifact@v2
       with:
