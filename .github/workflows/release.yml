@@ -92,10 +92,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download macOS amd64 binary
+    - name: Download macOS arm64 binary
       uses: actions/download-artifact@v4
       with:
-        name: Fintrack_MacOS_Amd64
+        name: Fintrack_MacOS_Arm64
 
     - name: Download Windows amd64 binary
       uses: actions/download-artifact@v4
@@ -112,7 +112,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./Fintrack_MacOS_Amd64
+          ./Fintrack_MacOS_Arm64
           ./Fintrack_Windows_Amd64.exe
           ./Fintrack_Linux_Amd64
       env:
