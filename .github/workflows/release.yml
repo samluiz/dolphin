@@ -51,7 +51,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev upx makensis
+        sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev upx nsis
 
     - name: Set up Go
       uses: actions/setup-go@v5
