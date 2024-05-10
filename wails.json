@@ -1,7 +1,8 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "dolphin",
-  "outputfilename": "dolphin",
+  "name": "Dolphin",
+  "outputfilename": "Dolphin",
+  "nsisType": "single",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
@@ -9,5 +10,10 @@
   "author": {
     "name": "Samuel Luiz",
     "email": "samuelluizrl@outlook.com"
+  },
+  "info": {
+    "companyName": "Saurs",
+    "productName": "Dolphin",
+    "productVersion": "0.2.3"
   }
 }

@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"dolphin/backend/shared/utils"
+
 	"github.com/jmoiron/sqlx"
 	_ "modernc.org/sqlite"
 )
@@ -16,15 +18,15 @@ func Connect() (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin")); os.IsNotExist(err) {
-		err = os.Mkdir(filepath.Join(homeDir, ".dolphin"), 0755)
+	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin", utils.GetAppVersion())); os.IsNotExist(err) {
+		err = os.Mkdir(filepath.Join(homeDir, ".dolphin", utils.GetAppVersion()), 0755)
 
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	dbPath := filepath.Join(homeDir, ".dolphin", "database.db")
+	dbPath := filepath.Join(homeDir, ".dolphin", utils.GetAppVersion(), "database.db")
 
 	db, err := sqlx.Connect("sqlite", dbPath)
 

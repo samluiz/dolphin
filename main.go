@@ -1,12 +1,12 @@
 package main
 
 import (
-	"embed"
 	"dolphin/backend/db"
 	"dolphin/backend/earning"
 	"dolphin/backend/expense"
 	"dolphin/backend/expense/category"
 	"dolphin/backend/profile"
+	"embed"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -44,7 +44,7 @@ func main() {
 		Title:  "Dolphin | Finance Manager",
 		Width:  1024,
 		Height: 768,
-		Fullscreen: true,
+		WindowStartState: options.Maximised,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
