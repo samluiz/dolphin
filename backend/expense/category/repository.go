@@ -2,6 +2,7 @@ package category
 
 import (
 	t "dolphin/backend/shared/types"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -73,8 +74,8 @@ func (r *repository) Update(id int, e t.CategoryInput) (t.Category, error) {
 	var category t.Category
 
 	err := r.db.Get(&category,
-		"UPDATE categories SET description = ? WHERE id = ? RETURNING *",
-		e.Description, id)
+		"UPDATE categories SET description = ?, updated_at = ? WHERE id = ? RETURNING *",
+		e.Description, time.Now().Format("2006-01-02 15:04:05"), id)
 
 	if err != nil {
 		return t.Category{}, err

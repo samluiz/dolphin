@@ -5,6 +5,8 @@ type Expense struct {
 	Description string  `json:"description" db:"description"`
 	Amount      float64 `json:"amount" db:"amount"`
 	ProfileID   int     `json:"profile_id" db:"profile_id"`
+	CreatedAt string `json:"created_at" db:"created_at"`
+	UpdatedAt string `json:"updated_at" db:"updated_at"`
 }
 
 type ExpenseInput struct {

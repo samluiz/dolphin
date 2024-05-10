@@ -98,7 +98,6 @@ function onSubmit(): void {
         Edit {{ selectedTabId === 1 ? "earning" : "expense" }}
       </h1>
       <Input
-        :step="0.01"
         :required="true"
         :name="'description'"
         :title="'Description'"

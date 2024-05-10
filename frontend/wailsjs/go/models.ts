@@ -3,6 +3,8 @@ export namespace types {
 	export class Category {
 	    id: number;
 	    description: string;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Category(source);
@@ -12,6 +14,8 @@ export namespace types {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.description = source["description"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class CategoryInput {
@@ -31,6 +35,8 @@ export namespace types {
 	    description: string;
 	    amount: number;
 	    profile_id: number;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Earning(source);
@@ -42,6 +48,8 @@ export namespace types {
 	        this.description = source["description"];
 	        this.amount = source["amount"];
 	        this.profile_id = source["profile_id"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class EarningInput {
@@ -111,6 +119,8 @@ export namespace types {
 	    description: string;
 	    amount: number;
 	    profile_id: number;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Expense(source);
@@ -122,6 +132,8 @@ export namespace types {
 	        this.description = source["description"];
 	        this.amount = source["amount"];
 	        this.profile_id = source["profile_id"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class ExpenseInput {
@@ -197,6 +209,8 @@ export namespace types {
 	export class Profile {
 	    id: number;
 	    description: string;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Profile(source);
@@ -206,6 +220,8 @@ export namespace types {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.description = source["description"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class ProfileInput {

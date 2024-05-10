@@ -2,6 +2,7 @@ package expense
 
 import (
 	t "dolphin/backend/shared/types"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -93,8 +94,8 @@ func (r *repository) Update(id int, e t.ExpenseUpdate) (t.Expense, error) {
 	var expense t.Expense
 
 	err := r.db.Get(&expense,
-		"UPDATE expenses SET description = ?, amount = ? WHERE id = ? RETURNING *",
-		e.Description, e.Amount, id)
+		"UPDATE expenses SET description = ?, amount = ?, updated_at = ? WHERE id = ? RETURNING *",
+		e.Description, e.Amount, time.Now().Format("2006-01-02 15:04:05"), id)
 
 	if err != nil {
 		return t.Expense{}, err

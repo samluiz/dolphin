@@ -2,6 +2,7 @@ package profile
 
 import (
 	t "dolphin/backend/shared/types"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -60,8 +61,8 @@ func (r *repository) Update(id int, e t.ProfileInput) (t.Profile, error) {
 	var profile t.Profile
 
 	err := r.db.Get(&profile,
-		"UPDATE profiles SET description = ? WHERE id = ? RETURNING *",
-		e.Description, id)
+		"UPDATE profiles SET description = ?, updated_at = ? WHERE id = ? RETURNING *",
+		e.Description, time.Now().Format("2006-01-02 15:04:05"), id)
 
 	if err != nil {
 		return t.Profile{}, err
