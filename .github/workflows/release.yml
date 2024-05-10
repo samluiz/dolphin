@@ -15,10 +15,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        brew install upx
-
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
@@ -80,13 +76,13 @@ jobs:
     - name: Upload Windows/amd64 installer
       uses: actions/upload-artifact@v4
       with:
-        name: Dolphin_Windows_Amd64
+        name: Dolphin_Windows_Amd64_Setup
         path: ./build/bin/Dolphin_Windows_Amd64-Setup.exe
 
     - name: Upload Windows/arm64 installer
       uses: actions/upload-artifact@v4
       with:
-        name: Dolphin_Windows_Arm64
+        name: Dolphin_Windows_Arm64_Setup
         path: ./build/bin/Dolphin_Windows_Arm64-Setup.exe
 
     - name: Upload Linux/amd64 binary
@@ -115,12 +111,12 @@ jobs:
     - name: Download Windows amd64 installer
       uses: actions/download-artifact@v4
       with:
-        name: Dolphin_Windows_Amd64-Setup
+        name: Dolphin_Windows_Amd64_Setup
 
     - name: Download Windows arm64 installer
       uses: actions/download-artifact@v4
       with:
-        name: Dolphin_Windows_Arm64-Setup
+        name: Dolphin_Windows_Arm64_Setup
 
     - name: Download Linux amd64 binary
       uses: actions/download-artifact@v4
