@@ -1,5 +1,9 @@
 # Dolphin | Finance Manager
 
+<img width="1436" alt="image" src="https://github.com/samluiz/dolphin/assets/97702597/b5a61886-f54a-438d-b846-b7fbca8e24f5">
+
+<img width="1440" alt="image" src="https://github.com/samluiz/dolphin/assets/97702597/04ca7a5b-67b7-45ae-93de-d75949725f3b">
+
 ## About
 
 Dolphin is a desktop financial management application that focuses on simplicity and the most basic features of a financial manager. If you use Excel, Dolphin is an alternative for you who don't wanna waste time looking for a financial spreadsheet template or building your own in Excel. It's designed to make your life easier, but not to track your expenses and earnings for a specific period. It's that simple.
