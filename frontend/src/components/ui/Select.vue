@@ -20,7 +20,7 @@ defineProps<Props<types.Category>>();
       :value="modelValue"
       :name="name"
       :required="required"
-      class="w-full p-1 rounded-sm shadow-lg bg-slate-600 border-0 appearance-none outline-none focus:ring-1 placeholder:text-center"
+      class="w-full p-1 rounded-sm shadow-lg text-white bg-gray-700 dark:text-black dark:bg-gray-300 border-0 appearance-none outline-none focus:ring-1 placeholder:text-center"
       placeholder="Select a category"
       @change="
         $emit('update:modelValue', ($event.target as HTMLInputElement)?.value)

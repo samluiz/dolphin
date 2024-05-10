@@ -2,11 +2,11 @@ package main
 
 import (
 	"embed"
-	"fintrack/backend/db"
-	"fintrack/backend/earning"
-	"fintrack/backend/expense"
-	"fintrack/backend/expense/category"
-	"fintrack/backend/profile"
+	"dolphin/backend/db"
+	"dolphin/backend/earning"
+	"dolphin/backend/expense"
+	"dolphin/backend/expense/category"
+	"dolphin/backend/profile"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -41,9 +41,10 @@ func main() {
 	app := NewApp()
 
 	err = wails.Run(&options.App{
-		Title:  "Fintrack | Finance Tracker",
+		Title:  "Dolphin | Finance Manager",
 		Width:  1024,
 		Height: 768,
+		Fullscreen: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

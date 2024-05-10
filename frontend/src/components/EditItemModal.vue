@@ -10,6 +10,8 @@ import {
 import { FindByID as findEarningById } from "../../wailsjs/go/earning/service";
 import { FindByID as findExpenseById } from "../../wailsjs/go/expense/service";
 import { types } from "wailsjs/go/models";
+import ConfirmButton from "./ui/ConfirmButton.vue";
+import CancelButton from "./ui/CancelButton.vue";
 
 const props = defineProps({
   isOpen: Boolean,
@@ -92,7 +94,7 @@ function onSubmit(): void {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl">
+      <h1 class="text-2xl text-black dark:text-white">
         Edit {{ selectedTabId === 1 ? "earning" : "expense" }}
       </h1>
       <Input
@@ -125,19 +127,8 @@ function onSubmit(): void {
         "
       />
       <div class="flex gap-4">
-        <button
-          @click="$emit('on-cancel')"
-          type="button"
-          class="bg-gray-500 text-white px-4 py-2 rounded-lg"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg"
-        >
-          Edit
-        </button>
+        <CancelButton @click="emit('on-cancel')">Cancel</CancelButton>
+        <ConfirmButton>Edit</ConfirmButton>
       </div>
     </form>
   </Dialog>

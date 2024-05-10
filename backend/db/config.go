@@ -16,15 +16,15 @@ func Connect() (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	if _, err := os.Stat(filepath.Join(homeDir, ".fintrack")); os.IsNotExist(err) {
-		err = os.Mkdir(filepath.Join(homeDir, ".fintrack"), 0755)
+	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin")); os.IsNotExist(err) {
+		err = os.Mkdir(filepath.Join(homeDir, ".dolphin"), 0755)
 
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	dbPath := filepath.Join(homeDir, ".fintrack", "database.db")
+	dbPath := filepath.Join(homeDir, ".dolphin", "database.db")
 
 	db, err := sqlx.Connect("sqlite", dbPath)
 
@@ -46,18 +46,24 @@ func initTables(db *sqlx.DB) error {
 	CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT UNIQUE,
-    is_default BOOLEAN
+    is_default BOOLEAN,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    description TEXT UNIQUE
+    description TEXT UNIQUE,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS expenses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
     amount REAL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_id INTEGER,
     FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
@@ -66,6 +72,8 @@ CREATE TABLE IF NOT EXISTS earnings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
     amount REAL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_id INTEGER,
     FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );

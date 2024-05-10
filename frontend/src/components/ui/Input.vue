@@ -14,9 +14,11 @@ defineProps<Props>();
 
 <template>
   <div class="flex flex-col justify-start items-center gap-2">
-    <label class="w-full text-sm" :for="name">{{ title }}</label>
+    <label class="w-full text-sm text-black dark:text-white" :for="name">{{
+      title
+    }}</label>
     <input
-      class="w-full p-1 rounded-sm shadow-lg bg-slate-600 border-0 appearance-none outline-none focus:ring-1"
+      class="w-full p-1 rounded-sm shadow-lg text-white bg-secondary dark:text-black dark:bg-primary border-0 appearance-none outline-none focus:ring-1"
       :required="required"
       :type="type"
       :id="name"

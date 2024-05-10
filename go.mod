@@ -1,4 +1,4 @@
-module fintrack
+module dolphin
 
 go 1.22
 
@@ -6,7 +6,7 @@ toolchain go1.22.0
 
 require (
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/wailsapp/wails/v2 v2.8.1
+	github.com/wailsapp/wails/v2 v2.8.0
 	modernc.org/sqlite v1.29.8
 )
 

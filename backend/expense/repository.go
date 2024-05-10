@@ -1,7 +1,7 @@
 package expense
 
 import (
-	t "fintrack/backend/shared/types"
+	t "dolphin/backend/shared/types"
 
 	"github.com/jmoiron/sqlx"
 )

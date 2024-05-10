@@ -207,15 +207,14 @@ const balance = computed(() => {
 </script>
 
 <template>
-  <div class="flex mb-4 gap-2">
+  <div class="flex justify-center items-center mb-4 gap-2">
     <button
       v-for="tab in tabs"
       :key="tab.id"
       @click="selectedTabId = tab.id"
-      class="p-2 font-semibold rounded-md"
+      class="p-2 text-black dark:text-white rounded-md"
       :class="{
-        'duration-200 bg-gray-200 text-gray-600 font-bold':
-          selectedTabId === tab.id,
+        'duration-200 bg-primary': selectedTabId === tab.id,
       }"
     >
       {{ tab.name }}
@@ -224,7 +223,7 @@ const balance = computed(() => {
 
   <table
     v-if="tableData && tableData.length > 0"
-    class="min-w-full leading-normal"
+    class="min-w-full rounded-lg leading-normal"
   >
     <thead>
       <tr class="text-center">
@@ -235,7 +234,11 @@ const balance = computed(() => {
       </tr>
     </thead>
     <tbody>
-      <tr class="text-center" v-for="item in tableData" :key="item.id">
+      <tr
+        class="text-center odd:bg-primary even:bg-secondary text-white"
+        v-for="item in tableData"
+        :key="item.id"
+      >
         <TableData>{{ item.description }}</TableData>
         <TableData>{{ maskCurrency(item.amount) }}</TableData>
         <TableData v-if="selectedTabId === 2">{{
@@ -254,20 +257,23 @@ const balance = computed(() => {
       </tr>
     </tbody>
   </table>
-  <div v-else class="text-center">No data available</div>
+  <div v-else class="text-center text-black dark:text-white py-4">
+    No data available yet
+  </div>
 
-  <div class="w-full flex items-start justify-center">
+  <div class="w-full mt-4 flex items-start justify-center">
     <div class="flex-1">
       <IconButton @click="openAddModal">
         <AddIcon />
       </IconButton>
     </div>
     <div class="flex-2 grid grid-flow-col gap-2">
-      <span class="p-2 rounded-md bg-green-600 bg-opacity-30"
+      <span
+        class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
         >Total Earnings: {{ maskCurrency(totalEarnings) }}</span
       >
 
-      <span class="p-2 rounded-md bg-red-600 bg-opacity-30"
+      <span class="p-2 rounded-md bg-red-600 bg-opacity-50 hover:bg-opacity-100"
         >Total Expenses: {{ maskCurrency(totalExpenses) }}</span
       >
 

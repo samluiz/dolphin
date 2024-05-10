@@ -2,7 +2,7 @@
 
 <template>
   <th
-    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-xs font-semibold text-gray-700 uppercase tracking-wider"
+    class="p-4 bg-white dark:bg-black text-xs font-semibold text-black dark:text-white uppercase tracking-wider"
   >
     <slot></slot>
   </th>

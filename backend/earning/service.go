@@ -1,6 +1,6 @@
 package earning
 
-import t "fintrack/backend/shared/types"
+import t "dolphin/backend/shared/types"
 
 type Service interface {
 	FindAll() ([]t.EarningOutput, error)
