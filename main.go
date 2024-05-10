@@ -7,6 +7,7 @@ import (
 	"dolphin/backend/expense/category"
 	"dolphin/backend/profile"
 	"embed"
+	"fmt"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -16,9 +17,15 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+var Version string
+
 func main() {
 
+	db.Version = Version
+
 	db, err := db.Connect()
+
+	fmt.Println("version: ", Version)
 
 	if err != nil {
 		panic(err)

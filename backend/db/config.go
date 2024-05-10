@@ -4,29 +4,19 @@ import (
 	"os"
 	"path/filepath"
 
-	"dolphin/backend/shared/utils"
-
 	"github.com/jmoiron/sqlx"
 	_ "modernc.org/sqlite"
 )
 
+var Version string
+
 func Connect() (*sqlx.DB, error) {
 
-	homeDir, err := os.UserHomeDir()
+	dbPath, err := getDbPath()
 
 	if err != nil {
 		return nil, err
 	}
-
-	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin", utils.GetAppVersion())); os.IsNotExist(err) {
-		err = os.Mkdir(filepath.Join(homeDir, ".dolphin", utils.GetAppVersion()), 0755)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	dbPath := filepath.Join(homeDir, ".dolphin", utils.GetAppVersion(), "database.db")
 
 	db, err := sqlx.Connect("sqlite", dbPath)
 
@@ -102,4 +92,34 @@ INSERT INTO categories (description) SELECT 'Others' WHERE NOT EXISTS (SELECT 1 
 	}
 
 	return nil
+}
+
+func getDbPath() (string, error) {
+	homeDir, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin")); os.IsNotExist(err) {
+		err = os.Mkdir(filepath.Join(homeDir, ".dolphin"), 0755)
+
+		if err != nil {
+			return "", err
+		}
+	}
+
+	if Version == "" {
+		Version = "Build"
+	}
+	
+	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin", Version)); os.IsNotExist(err) {
+		err = os.Mkdir(filepath.Join(homeDir, ".dolphin", Version), 0755)
+
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return filepath.Join(homeDir, ".dolphin", Version, "database.db"), nil
 }
