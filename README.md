@@ -6,7 +6,7 @@
 
 ## About
 
-Dolphin is a desktop financial management application that focuses on simplicity and the most basic features of a financial manager. If you use Excel, Dolphin is an alternative for you who don't wanna waste time looking for a financial spreadsheet template or building your own in Excel. It's designed to make your life easier, but not to track your expenses and earnings for a specific period. It's that simple.
+Dolphin is a desktop finance management application that focuses on simplicity and the most basic features of a finance manager. If you use Excel, Dolphin is an alternative for you who don't wanna waste time looking for a finance spreadsheet template or building your own in Excel. It's designed to make your life easier, but not to track your expenses and earnings for a specific period. It's that simple.
 
 ## Contributing
 
