@@ -24,15 +24,15 @@ jobs:
       run: |
         go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-    - name: Build for macOS/arm64
+    - name: Build for macOS
       run: |
-        wails build -platform darwin/arm64 -ldflags "-X main.Version=$GITHUB_REF_NAME"
+        wails build -platform darwin/universal -ldflags "-X main.Version=$GITHUB_REF_NAME"
 
-    - name: Zip macOS arm64 binary
+    - name: Zip macOS binary
       run: |
         zip -r Dolphin_MacOS.zip ./build/bin/Dolphin.app
 
-    - name: Upload macOS arm64 binary
+    - name: Upload macOS zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_MacOS
@@ -81,13 +81,13 @@ jobs:
       run: |
         zip -r Dolphin_Linux.zip ./Dolphin_Linux_Amd64
 
-    - name: Upload Windows/amd64 installer
+    - name: Upload Windows/amd64 zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Windows_Setup
         path: Dolphin_Windows_Setup.zip
 
-    - name: Upload Linux/amd64 binary
+    - name: Upload Linux/amd64 zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Linux
@@ -105,19 +105,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download macOS arm64 binary
+    - name: Download macOS zip
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_MacOS
         path: ./artifacts
 
-    - name: Download Windows amd64 installer
+    - name: Download Windows amd64 zip
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_Windows_Setup
         path: ./artifacts
 
-    - name: Download Linux amd64 binary
+    - name: Download Linux amd64 zip
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_Linux
