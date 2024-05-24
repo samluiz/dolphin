@@ -64,6 +64,7 @@ jobs:
     - name: Build for Windows/amd64
       run: |
         wails build -platform windows/amd64 -ldflags "-X main.Version=$GITHUB_REF_NAME" --nsis   
+        rm ./build/bin/Dolphin.exe
         mv ./build/bin ./build/Dolphin_Windows_Amd64-Setup
 
     - name: Zip Windows amd64 installer
