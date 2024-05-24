@@ -27,12 +27,11 @@ jobs:
     - name: Build for macOS/arm64
       run: |
         wails build -platform darwin/arm64 -ldflags "-X main.Version=$GITHUB_REF_NAME"
-        mv ./build/bin/Dolphin.app ./build/bin/Dolphin-MacOS.app
 
     - name: Upload macOS arm64 binary
       uses: actions/upload-artifact@v4
       with:
-        name: Dolphin.app
+        name: Dolphin-MacOS.app
         path: ./build/bin/Dolphin.app
 
   build-windows-and-linux:
@@ -106,7 +105,7 @@ jobs:
     - name: Download macOS arm64 binary
       uses: actions/download-artifact@v4
       with:
-        name: Dolphin.app
+        name: Dolphin-MacOS.app
 
     - name: Download Windows amd64 installer
       uses: actions/download-artifact@v4
@@ -128,7 +127,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./Dolphin.app
+          ./Dolphin-MacOS.app
           ./Dolphin_Windows_Amd64-Setup.exe
           ./Dolphin_Windows_Arm64-Setup.exe
           ./Dolphin_Linux_Amd64
