@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRefs, watch } from "vue";
+import { toRefs } from "vue";
 import LightModeIcon from "./ui/icons/LightModeIcon.vue";
 import DarkModeIcon from "./ui/icons/DarkModeIcon.vue";
 
@@ -14,9 +14,9 @@ const { isDarkMode } = toRefs(props);
 
 <template>
   <div
-    class="fixed top-8 right-8"
+    class="fixed duration-200 top-8 right-8"
     :class="{
-      'dark duration-200': isDarkMode,
+      dark: isDarkMode,
     }"
   >
     <button

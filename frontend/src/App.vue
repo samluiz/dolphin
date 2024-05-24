@@ -89,7 +89,12 @@ fetchAppVersion();
         class="grid place-items-center p-8 text-center text-black dark:text-white"
         v-else-if="profileStore.hasProfileCreated() && !profileStore.profile"
       >
-        <ProfileSelector />
+        <ProfileSelector
+          :profile="profileStore.profile!"
+          @on-select="profileStore.setActiveProfile"
+          @on-profile-create="fetchData()"
+          @on-cancel="fetchData()"
+        />
       </div>
 
       <div v-else>

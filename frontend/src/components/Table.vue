@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref} from "vue";
+import { computed, onMounted, ref } from "vue";
 import EditIcon from "./ui/icons/EditIcon.vue";
 import DeleteIcon from "./ui/icons/DeleteIcon.vue";
 import IconButton from "./ui/IconButton.vue";
@@ -117,6 +117,11 @@ const closeAddModal = () => {
 };
 
 const addItem = (formData: types.EarningUpdate | types.ExpenseUpdate) => {
+  if (profile?.value === null) {
+    console.error("Profile is null");
+    return;
+  }
+
   if (selectedTabId.value === 1) {
     addEarning(formData);
   } else {
@@ -239,9 +244,9 @@ const balance = computed(() => {
     </button>
     <div class="grid place-items-center grid-flow-col absolute right-10">
       <ProfileSelector
-        @on-select="profileStore.setActiveProfile"
+        :profile="profile!"
         @on-profile-create="fetchData()"
-        @on-cancel="fetchData()"
+        @on-profile-change="fetchData()"
       />
       <button
         @click="openUpdateProfileModal"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, toRefs } from "vue";
-import { Create as createProfile } from "../../wailsjs/go/profile/service";
 import Input from "./ui/Input.vue";
 import Checkbox from "./ui/Checkbox.vue";
 import ConfirmButton from "./ui/ConfirmButton.vue";

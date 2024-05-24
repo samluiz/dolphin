@@ -2,11 +2,8 @@
 import { Ref, onMounted, ref, toRefs } from "vue";
 import Dialog from "./ui/Dialog.vue";
 import Input from "./ui/Input.vue";
-import { Item } from "@/shared/types";
 import {
-  Create as createCategory,
   FindAll as findAllCategories,
-  FindByDescription,
 } from "../../wailsjs/go/category/service";
 import { types } from "wailsjs/go/models";
 import Select from "./ui/Select.vue";

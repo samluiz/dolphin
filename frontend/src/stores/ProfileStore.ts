@@ -50,7 +50,7 @@ export const useProfileStore = defineStore(
       const response = await createProfile(profile)
         .then(async (data) => {
           setActiveProfile(data);
-          await fetchProfiles();
+          fetchProfiles();
         })
         .catch((e: any) => {
           console.error(e);
@@ -62,7 +62,7 @@ export const useProfileStore = defineStore(
       const response = await updateProfile(id, profile)
         .then(async (data) => {
           setActiveProfile(data);
-          await fetchProfiles();
+          fetchProfiles();
         })
         .catch((e: any) => {
           console.error(e);
@@ -73,8 +73,8 @@ export const useProfileStore = defineStore(
     const remove = async (id: number) => {
       const response = await deleteProfile(id)
         .then(async () => {
-          await fetchProfiles();
           setActiveProfile(null);
+          fetchProfiles();
         })
         .catch((e: any) => {
           console.error(e);

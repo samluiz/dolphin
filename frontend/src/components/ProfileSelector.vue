@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineEmits, computed } from "vue";
+import { ref, defineEmits, computed, toRefs } from "vue";
 import { useProfileStore } from "@/stores/ProfileStore";
 import { types } from "../../wailsjs/go/models";
 import CreateProfileModal from "./CreateProfileModal.vue";
@@ -7,21 +7,26 @@ import ArrowIcon from "./ui/icons/ArrowIcon.vue";
 import { storeToRefs } from "pinia";
 import AddIcon from "./ui/icons/AddIcon.vue";
 
-const emit = defineEmits(["on-select", "on-profile-create", "on-cancel"]);
+const emit = defineEmits(["on-profile-create", "on-profile-change"]);
 
 const profileStore = useProfileStore();
 
-const { profile, profiles } = storeToRefs(profileStore);
+const { profiles } = storeToRefs(profileStore);
 
-const selectedProfile = ref<types.Profile | null>(null);
+const props = defineProps({
+  profile: Object as () => types.Profile,
+});
+
+const { profile } = toRefs(props);
+
 const isCreateProfileModalOpen = ref(false);
 const isDropdownOpen = ref(false);
 
 const selectProfile = (newProfile: types.Profile) => {
-  profileStore.setActiveProfile(newProfile);
-  selectedProfile.value = newProfile;
   isDropdownOpen.value = false;
-  emit("on-select", newProfile);
+  profileStore.setActiveProfile(newProfile);
+  profileStore.fetchProfiles();
+  emit("on-profile-change");
 };
 
 const openCreateProfileModal = () => {
@@ -30,12 +35,12 @@ const openCreateProfileModal = () => {
 
 const closeCreateProfileModal = () => {
   isCreateProfileModalOpen.value = false;
-  emit("on-cancel");
+  emit("on-profile-change");
 };
 
 const onProfileCreate = () => {
-  emit("on-profile-create", profile.value);
-  emit("on-cancel");
+  emit("on-profile-create", profile?.value);
+  emit("on-profile-change");
 };
 
 const toggleDropdown = () => {

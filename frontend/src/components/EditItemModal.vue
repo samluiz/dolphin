@@ -3,10 +3,7 @@ import { Ref, onMounted, ref, toRefs, watch } from "vue";
 import Dialog from "./ui/Dialog.vue";
 import Input from "./ui/Input.vue";
 import Select from "./ui/Select.vue";
-import {
-  Create as createCategory,
-  FindAll as findAllCategories,
-} from "../../wailsjs/go/category/service";
+import { FindAll as findAllCategories } from "../../wailsjs/go/category/service";
 import { FindByID as findEarningById } from "../../wailsjs/go/earning/service";
 import { FindByID as findExpenseById } from "../../wailsjs/go/expense/service";
 import { types } from "wailsjs/go/models";
