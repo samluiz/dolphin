@@ -31,7 +31,7 @@ jobs:
     - name: Upload macOS arm64 binary
       uses: actions/upload-artifact@v4
       with:
-        name: Dolphin-MacOS.app
+        name: Dolphin-MacOS
         path: ./build/bin/Dolphin.app
 
   build-windows-and-linux:
@@ -60,35 +60,35 @@ jobs:
     - name: Build for Windows/amd64
       run: |
         wails build -platform windows/amd64 -ldflags "-X main.Version=$GITHUB_REF_NAME" --nsis   
-        mv ./build/bin/Dolphin-amd64-installer.exe ./build/bin/Dolphin_Windows_Amd64-Setup.exe
+        mv ./build/bin ./build/Dolphin_Windows_Amd64-Setup
 
     - name: Build for Windows/arm64
       run: |
         wails build -platform windows/arm64 -ldflags "-X main.Version=$GITHUB_REF_NAME" --nsis   
-        mv ./build/bin/Dolphin-arm64-installer.exe ./build/bin/Dolphin_Windows_Arm64-Setup.exe
+        mv ./build/bin ./build/Dolphin_Windows_Arm64-Setup
 
     - name: Build for Linux/amd64
       run: |
         wails build -platform linux/amd64 -ldflags "-X main.Version=$GITHUB_REF_NAME"
-        mv ./build/bin/Dolphin ./build/bin/Dolphin_Linux_Amd64
+        mv ./build/bin ./build/Dolphin_Linux_Amd64
 
     - name: Upload Windows/amd64 installer
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Windows_Amd64_Setup
-        path: ./build/bin/Dolphin_Windows_Amd64-Setup.exe
+        path: ./build/Dolphin_Windows_Amd64-Setup
 
     - name: Upload Windows/arm64 installer
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Windows_Arm64_Setup
-        path: ./build/bin/Dolphin_Windows_Arm64-Setup.exe
+        path: ./build/Dolphin_Windows_Arm64-Setup
 
     - name: Upload Linux/amd64 binary
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Linux_Amd64
-        path: ./build/bin/Dolphin_Linux_Amd64
+        path: ./build/Dolphin_Linux_Amd64
 
   create-release:
     environment: 
@@ -105,7 +105,7 @@ jobs:
     - name: Download macOS arm64 binary
       uses: actions/download-artifact@v4
       with:
-        name: Dolphin-MacOS.app
+        name: Dolphin-MacOS
 
     - name: Download Windows amd64 installer
       uses: actions/download-artifact@v4
@@ -127,9 +127,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./Dolphin-MacOS.app
-          ./Dolphin_Windows_Amd64-Setup.exe
-          ./Dolphin_Windows_Arm64-Setup.exe
+          ./Dolphin-MacOS.zip
+          ./Dolphin_Windows_Amd64-Setup.zip
+          ./Dolphin_Windows_Arm64-Setup.zip
           ./Dolphin_Linux_Amd64
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

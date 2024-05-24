@@ -87,7 +87,7 @@ fetchAppVersion();
 
       <div
         class="grid place-items-center p-8 text-center text-black dark:text-white"
-        v-if="profileStore.hasProfileCreated() && !profileStore.profile"
+        v-else-if="profileStore.hasProfileCreated() && !profileStore.profile"
       >
         <ProfileSelector />
       </div>
