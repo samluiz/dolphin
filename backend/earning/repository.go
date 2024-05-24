@@ -9,6 +9,7 @@ import (
 
 type Repository interface {
 	FindAll() ([]t.EarningOutput, error)
+	FindAllByProfileID(profileID int) ([]t.EarningOutput, error)
 	FindByID(id int) (t.EarningToUpdate, error)
 	Create(e t.EarningInput) (t.Earning, error)
 	Update(id int, e t.EarningUpdate) (t.Earning, error)
@@ -31,6 +32,18 @@ func (r *repository) FindAll() ([]t.EarningOutput, error) {
 	return earnings, nil
 }
 
+func (r *repository) FindAllByProfileID(profileID int) ([]t.EarningOutput, error) {
+	var earnings []t.EarningOutput
+
+	err := r.db.Select(&earnings, "SELECT id, description, amount, (SELECT SUM(amount) FROM earnings WHERE profile_id = ?) AS sub_total FROM earnings WHERE profile_id = ?", profileID, profileID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return earnings, nil
+}
+		
 func (r *repository) FindByID(id int) (t.EarningToUpdate, error) {
 	var earning t.EarningToUpdate
 

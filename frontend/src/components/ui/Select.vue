@@ -15,7 +15,9 @@ defineProps<Props<types.Category>>();
 
 <template>
   <div class="flex flex-col justify-start items-center gap-2">
-    <label class="w-full text-sm" :for="name">Category</label>
+    <label class="w-full text-sm text-black dark:text-white" :for="name"
+      >Category</label
+    >
     <select
       :value="modelValue"
       :name="name"
@@ -26,7 +28,9 @@ defineProps<Props<types.Category>>();
         $emit('update:modelValue', ($event.target as HTMLInputElement)?.value)
       "
     >
-      <option value="" disabled selected>Select an option</option>
+      <option class="text-black dark:text-white" value="" disabled selected>
+        Select an option
+      </option>
       <option v-for="option in options" :key="option.id" :value="option.id">
         {{ option.description }}
       </option>

@@ -209,6 +209,7 @@ export namespace types {
 	export class Profile {
 	    id: number;
 	    description: string;
+	    is_default: boolean;
 	    created_at: string;
 	    updated_at: string;
 	
@@ -220,12 +221,14 @@ export namespace types {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.description = source["description"];
+	        this.is_default = source["is_default"];
 	        this.created_at = source["created_at"];
 	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class ProfileInput {
 	    description: string;
+	    is_default: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ProfileInput(source);
@@ -234,6 +237,7 @@ export namespace types {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.description = source["description"];
+	        this.is_default = source["is_default"];
 	    }
 	}
 

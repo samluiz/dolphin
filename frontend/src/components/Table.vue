@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref} from "vue";
 import EditIcon from "./ui/icons/EditIcon.vue";
 import DeleteIcon from "./ui/icons/DeleteIcon.vue";
 import IconButton from "./ui/IconButton.vue";
@@ -13,40 +13,49 @@ import TableData from "./ui/TableData.vue";
 import {
   Create as createEarning,
   Update as updateEarning,
-  FindAll as findAllEarnings,
+  FindAllByProfileID as findAllEarnings,
   Delete as deleteEarning,
 } from "../../wailsjs/go/earning/service";
 import {
   Create as createExpense,
   Update as updateExpense,
-  FindAll as findAllExpenses,
+  FindAllByProfileID as findAllExpenses,
   Delete as deleteExpense,
 } from "../../wailsjs/go/expense/service";
 import { types } from "../../wailsjs/go/models";
+import ProfileSelector from "./ProfileSelector.vue";
+import { useProfileStore } from "@/stores/ProfileStore";
+import { storeToRefs } from "pinia";
+import EditProfileModal from "./EditProfileModal.vue";
 
-const isDeleteModalOpen = ref(false);
+const profileStore = useProfileStore();
+
+const { profile } = storeToRefs(profileStore);
+
+const isDeleteTableDataModalOpen = ref(false);
+const isUpdateProfileModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const isAddModalOpen = ref(false);
 const selectedRowId = ref(0);
 const selectedTabId = ref(1);
 
-const openDeleteModal = (id: number) => {
+const openDeleteTableDataModal = (id: number) => {
   selectedRowId.value = id;
-  isDeleteModalOpen.value = true;
+  isDeleteTableDataModalOpen.value = true;
 };
 
-const closeDeleteModal = () => {
+const closeDeleteTableDataModal = () => {
   selectedRowId.value = 0;
-  isDeleteModalOpen.value = false;
+  isDeleteTableDataModalOpen.value = false;
 };
 
-const deleteItem = async () => {
+const deleteTableData = async () => {
   if (selectedTabId.value === 1) {
     await deleteEarning(selectedRowId.value);
   } else {
     await deleteExpense(selectedRowId.value);
   }
-  isDeleteModalOpen.value = false;
+  isDeleteTableDataModalOpen.value = false;
   fetchData();
 };
 
@@ -58,6 +67,14 @@ const openEditModal = (id: number) => {
 const closeEditModal = () => {
   selectedRowId.value = 0;
   isEditModalOpen.value = false;
+};
+
+const openUpdateProfileModal = () => {
+  isUpdateProfileModalOpen.value = true;
+};
+
+const closeUpdateProfileModal = () => {
+  isUpdateProfileModalOpen.value = false;
 };
 
 const editItem = (formData: types.EarningUpdate | types.ExpenseUpdate) => {
@@ -112,7 +129,7 @@ function addEarning(formData: types.EarningUpdate | types.ExpenseUpdate) {
   const newEarning: types.EarningInput = {
     description: formData.description,
     amount: formData.amount,
-    profile_id: 1,
+    profile_id: profile?.value?.id || 1,
   };
   createEarning(newEarning)
     .then(() => {
@@ -128,7 +145,7 @@ function addExpense(formData: types.EarningUpdate | types.ExpenseUpdate) {
     description: formData.description,
     amount: formData.amount,
     category_id: (formData as types.ExpenseUpdate).category_id,
-    profile_id: 1,
+    profile_id: profile?.value?.id || 1,
   };
 
   createExpense(newExpense)
@@ -156,7 +173,7 @@ const isLoading = ref(false);
 
 const fetchEarnings = async () => {
   try {
-    const e = await findAllEarnings();
+    const e = await findAllEarnings(profile?.value?.id || 1);
     earnings.value = e;
   } catch (error) {
     console.error(error);
@@ -165,7 +182,7 @@ const fetchEarnings = async () => {
 
 const fetchExpenses = async () => {
   try {
-    const e = await findAllExpenses();
+    const e = await findAllExpenses(profile?.value?.id || 1);
     expenses.value = e;
   } catch (error) {
     console.error(error);
@@ -212,13 +229,27 @@ const balance = computed(() => {
       v-for="tab in tabs"
       :key="tab.id"
       @click="selectedTabId = tab.id"
-      class="p-2 text-black dark:text-white rounded-md"
+      class="py-1.5 px-2 text-black dark:text-white rounded-sm"
       :class="{
-        'duration-200 bg-primary': selectedTabId === tab.id,
+        'duration-200 bg-primary dark:bg-secondary text-black dark:text-black':
+          selectedTabId === tab.id,
       }"
     >
       {{ tab.name }}
     </button>
+    <div class="grid place-items-center grid-flow-col absolute right-10">
+      <ProfileSelector
+        @on-select="profileStore.setActiveProfile"
+        @on-profile-create="fetchData()"
+        @on-cancel="fetchData()"
+      />
+      <button
+        @click="openUpdateProfileModal"
+        class="py-1.5 px-2 duration-100 grid w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+      >
+        Edit profile
+      </button>
+    </div>
   </div>
 
   <table
@@ -235,7 +266,7 @@ const balance = computed(() => {
     </thead>
     <tbody>
       <tr
-        class="text-center odd:bg-primary even:bg-secondary text-white"
+        class="text-center odd:bg-primary even:bg-secondary text-black"
         v-for="item in tableData"
         :key="item.id"
       >
@@ -246,10 +277,13 @@ const balance = computed(() => {
         }}</TableData>
         <TableData class="flex flex-row justify-end">
           <div class="flex flex-row justify-evenly w-20">
-            <IconButton @click="openEditModal(item.id)">
+            <IconButton class="text-black" @click="openEditModal(item.id)">
               <EditIcon />
             </IconButton>
-            <IconButton @click="openDeleteModal(item.id)">
+            <IconButton
+              class="text-black"
+              @click="openDeleteTableDataModal(item.id)"
+            >
               <DeleteIcon />
             </IconButton>
           </div>
@@ -263,7 +297,7 @@ const balance = computed(() => {
 
   <div class="w-full mt-4 flex items-start justify-center">
     <div class="flex-1">
-      <IconButton @click="openAddModal">
+      <IconButton class="text-black dark:text-white" @click="openAddModal">
         <AddIcon />
       </IconButton>
     </div>
@@ -290,10 +324,10 @@ const balance = computed(() => {
   </div>
 
   <DestructiveActionModal
-    v-if="isDeleteModalOpen"
-    :is-open="isDeleteModalOpen"
-    @on-confirm="deleteItem"
-    @on-cancel="closeDeleteModal"
+    v-if="isDeleteTableDataModalOpen"
+    :is-open="isDeleteTableDataModalOpen"
+    @on-confirm="deleteTableData"
+    @on-cancel="closeDeleteTableDataModal"
   />
   <EditItemModal
     v-if="isEditModalOpen && selectedTabId"
@@ -309,5 +343,13 @@ const balance = computed(() => {
     :is-open="isAddModalOpen"
     @addItem="addItem"
     @on-cancel="closeAddModal"
+  />
+  <EditProfileModal
+    v-if="isUpdateProfileModalOpen"
+    :profile="profile!"
+    :is-open="isUpdateProfileModalOpen"
+    @on-profile-update="fetchData()"
+    @on-profile-delete="fetchData()"
+    @on-cancel="closeUpdateProfileModal"
   />
 </template>

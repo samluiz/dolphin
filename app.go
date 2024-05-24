@@ -23,3 +23,7 @@ func (a *App) startup(ctx context.Context) {
 // shutdown is called when the app is shutting down
 func (a *App) shutdown(ctx context.Context) {
 }
+
+func (a *App) GetAppVersion() string {
+	return Version
+}

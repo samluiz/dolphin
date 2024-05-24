@@ -17,15 +17,18 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+type AppInfo struct {
+	Version string
+}
+
 var Version string
 
 func main() {
 
 	db.Version = Version
+	fmt.Println("version: ", Version)
 
 	db, err := db.Connect()
-
-	fmt.Println("version: ", Version)
 
 	if err != nil {
 		panic(err)

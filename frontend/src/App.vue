@@ -3,26 +3,34 @@ import { onMounted, ref, watch } from "vue";
 import Table from "./components/Table.vue";
 import DolphinIcon from "./components/ui/icons/DolphinIcon.vue";
 import ThemeSwitcher from "./components/ThemeSwitcher.vue";
-import { types } from "../wailsjs/go/models";
-import {
-  Create as createProfile,
-  Update as updateProfile,
-  FindAll as findAllProfiles,
-  Delete as deleteProfile,
-} from "../wailsjs/go/profile/service";
+import { GetAppVersion } from "../wailsjs/go/main/App";
+import CreateProfileModal from "./components/CreateProfileModal.vue";
+import IconButton from "./components/ui/IconButton.vue";
+import AddIcon from "./components/ui/icons/AddIcon.vue";
+import { useProfileStore } from "./stores/ProfileStore";
+import ProfileSelector from "./components/ProfileSelector.vue";
 
-const profiles = ref<types.Profile[]>([]);
-const hasProfileCreated = ref(false);
+const profileStore = useProfileStore();
+
+const isCreateProfileModalOpen = ref(false);
+const appVersion = ref("");
 
 const fetchData = async () => {
-  const response = await findAllProfiles();
-  profiles.value = response;
+  await fetchProfiles();
+};
+
+const fetchProfiles = async () => {
+  await profileStore.fetchProfiles();
+};
+
+const fetchAppVersion = async () => {
+  const response = await GetAppVersion();
+  appVersion.value = response;
 };
 
 const isDarkMode = ref(false);
 
 const toggleTheme = () => {
-  console.log("toggleTheme");
   isDarkMode.value = !isDarkMode.value;
 };
 
@@ -37,16 +45,24 @@ onMounted(() => {
   });
 
   fetchData();
-  if (profiles.value.length !== 0) {
-    hasProfileCreated.value = true;
-  }
 });
+
+const openCreateProfileModal = () => {
+  isCreateProfileModalOpen.value = true;
+};
+
+const closeCreateProfileModal = () => {
+  isCreateProfileModalOpen.value = false;
+  fetchData();
+};
+
+fetchAppVersion();
 </script>
 
 <template>
   <ThemeSwitcher @toggle-theme="toggleTheme" :is-dark-mode="isDarkMode">
     <div
-      class="h-screen w-screen bg-[#eaeaea] dark:bg-[#1c1c1c] p-8"
+      class="h-screen w-screen bg-light dark:bg-dark p-8"
       :class="{
         dark: isDarkMode,
       }"
@@ -57,8 +73,41 @@ onMounted(() => {
           <h1 class="text-black dark:text-white text-5xl">Dolphin</h1>
         </div>
       </div>
-      <div class="w-full p-2">
-        <Table />
+      <div
+        class="w-full grid place-items-center p-8 text-center text-black dark:text-white"
+        v-if="!profileStore.hasProfileCreated()"
+      >
+        <span class="text-lg font-semibold"
+          >No profiles found. Create one right now!</span
+        >
+        <IconButton @click="openCreateProfileModal">
+          <AddIcon />
+        </IconButton>
+      </div>
+
+      <div
+        class="grid place-items-center p-8 text-center text-black dark:text-white"
+        v-if="!profileStore.profile"
+      >
+        <ProfileSelector />
+      </div>
+
+      <div v-else>
+        <div class="w-full p-2">
+          <Table />
+        </div>
+      </div>
+      <CreateProfileModal
+        v-if="isCreateProfileModalOpen"
+        :has-profile-created="!profileStore.hasProfileCreated()"
+        :is-open="isCreateProfileModalOpen"
+        @on-cancel="closeCreateProfileModal"
+      />
+
+      <div class="absolute bottom-0 left-0 p-4">
+        <span class="text-xs opacity-70 text-black dark:text-white"
+          >v{{ appVersion }}</span
+        >
       </div>
     </div>
   </ThemeSwitcher>

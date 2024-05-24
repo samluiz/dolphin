@@ -4,6 +4,7 @@ import t "dolphin/backend/shared/types"
 
 type Service interface {
 	FindAll() ([]t.ExpenseOutput, error)
+	FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error)
 	FindByID(id int) (t.ExpenseToUpdate, error)
 	Create(e t.ExpenseInput) (t.Expense, error)
 	Update(id int, e t.ExpenseUpdate) (t.Expense, error)
@@ -16,6 +17,10 @@ type service struct {
 
 func (s *service) FindAll() ([]t.ExpenseOutput, error) {
 	return s.r.FindAll()
+}
+
+func (s *service) FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error) {
+	return s.r.FindAllByProfileID(profileID)
 }
 
 func (s *service) FindByID(id int) (t.ExpenseToUpdate, error) {

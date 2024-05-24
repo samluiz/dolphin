@@ -18,11 +18,13 @@ func Connect() (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	db, err := sqlx.Connect("sqlite", dbPath)
+	db, err := sqlx.Connect("sqlite", dbPath + "?cache=shared")
 
 	if err != nil {
 		return nil, err
 	}
+
+	db.SetMaxOpenConns(1)
 
 	err = initTables(db)
 

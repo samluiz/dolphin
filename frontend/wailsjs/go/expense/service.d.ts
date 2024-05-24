@@ -8,6 +8,8 @@ export function Delete(arg1:number):Promise<void>;
 
 export function FindAll():Promise<Array<types.ExpenseOutput>>;
 
+export function FindAllByProfileID(arg1:number):Promise<Array<types.ExpenseOutput>>;
+
 export function FindByID(arg1:number):Promise<types.ExpenseToUpdate>;
 
 export function Update(arg1:number,arg2:types.ExpenseUpdate):Promise<types.Expense>;

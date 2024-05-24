@@ -71,17 +71,6 @@ const formData: Ref<types.EarningUpdate | types.ExpenseUpdate> = ref({
   category_id: 0,
 });
 
-function getCategoryId(description: string): number {
-  let categoryId = 0;
-  const category = categories.value.find(
-    (cat) => cat.description === description,
-  );
-  if (category) {
-    categoryId = category.id;
-  }
-  return categoryId;
-}
-
 function onSubmit(): void {
   formData.value.amount = Number(formData.value.amount);
   (formData.value as types.ExpenseUpdate).category_id = Number(
@@ -102,7 +91,7 @@ function onSubmit(): void {
         :name="'description'"
         :title="'Description'"
         :type="'text'"
-        :model-value="formData && formData.description"
+        :model-value="formData.description"
         @update:model-value="(newValue) => (formData.description = newValue)"
       />
       <Input
@@ -110,7 +99,7 @@ function onSubmit(): void {
         :name="'amount'"
         :title="'Amount'"
         :type="'number'"
-        :model-value="formData && formData.amount"
+        :model-value="formData.amount"
         @update:model-value="(newValue) => (formData.amount = newValue)"
       />
       <Select

@@ -9,6 +9,7 @@ import (
 
 type Repository interface {
 	FindAll() ([]t.ExpenseOutput, error)
+	FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error)
 	FindByID(id int) (t.ExpenseToUpdate, error)
 	Create(e t.ExpenseInput) (t.Expense, error)
 	Update(id int, e t.ExpenseUpdate) (t.Expense, error)
@@ -35,6 +36,32 @@ func (r *repository) FindAll() ([]t.ExpenseOutput, error) {
 		expense_category AS ec ON e.id = ec.expense_id
 	JOIN 
 		categories AS c ON ec.category_id = c.id`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return expenses, nil
+}
+
+func (r *repository) FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error) {
+	var expenses []t.ExpenseOutput
+
+	err := r.db.Select(&expenses, `
+	SELECT
+		e.id,
+		e.description,
+		e.amount,
+		c.description AS category,
+		(SELECT SUM(amount) FROM expenses WHERE profile_id = ?) AS sub_total
+	FROM
+		expenses AS e
+	JOIN
+		expense_category AS ec ON e.id = ec.expense_id
+	JOIN
+		categories AS c ON ec.category_id = c.id
+	WHERE
+		e.profile_id = ?`, profileID, profileID)
 
 	if err != nil {
 		return nil, err

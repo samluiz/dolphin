@@ -46,9 +46,17 @@ func (r *repository) FindByID(id int) (t.Profile, error) {
 func (r *repository) Create(e t.ProfileInput) (t.Profile, error) {
 	var profile t.Profile
 
+	if e.IsDefault {
+		_, err := r.db.Exec("UPDATE profiles SET is_default = ? WHERE is_default = ?", false, true)
+
+		if err != nil {
+			return t.Profile{}, err
+		}
+	}
+
 	err := r.db.Get(&profile,
-		"INSERT INTO profiles (description) VALUES (?) RETURNING *",
-		e.Description)
+		"INSERT INTO profiles (description, is_default) VALUES (?, ?) RETURNING *",
+		e.Description, e.IsDefault)
 
 	if err != nil {
 		return t.Profile{}, err
@@ -60,9 +68,27 @@ func (r *repository) Create(e t.ProfileInput) (t.Profile, error) {
 func (r *repository) Update(id int, e t.ProfileInput) (t.Profile, error) {
 	var profile t.Profile
 
-	err := r.db.Get(&profile,
-		"UPDATE profiles SET description = ?, updated_at = ? WHERE id = ? RETURNING *",
-		e.Description, time.Now().Format("2006-01-02 15:04:05"), id)
+	profiles, err := r.FindAll()
+
+	if err != nil {
+		return t.Profile{}, nil 
+	}
+
+	if e.IsDefault {
+		for _, p := range profiles {
+			if p.ID != id && p.IsDefault {
+				_, err := r.db.Exec("UPDATE profiles SET is_default = ? WHERE id = ?", false, p.ID)
+
+				if err != nil {
+					return t.Profile{}, err
+				}
+			}
+		}
+	}
+
+	err = r.db.Get(&profile,
+		"UPDATE profiles SET description = ?, is_default = ?,  updated_at = ? WHERE id = ? RETURNING *",
+		e.Description, e.IsDefault, time.Now().Format("2006-01-02 15:04:05"), id)
 
 	if err != nil {
 		return t.Profile{}, err
