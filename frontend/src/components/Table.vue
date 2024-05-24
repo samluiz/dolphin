@@ -32,6 +32,13 @@ const profileStore = useProfileStore();
 
 const { profile } = storeToRefs(profileStore);
 
+const pagination = ref<types.Pagination>({
+  page: 1,
+  size: 5,
+  order_by: "created_at",
+  sort_by: "desc",
+});
+
 const isDeleteTableDataModalOpen = ref(false);
 const isUpdateProfileModalOpen = ref(false);
 const isEditModalOpen = ref(false);
@@ -178,8 +185,8 @@ const isLoading = ref(false);
 
 const fetchEarnings = async () => {
   try {
-    const e = await findAllEarnings(profile?.value?.id || 1);
-    earnings.value = e;
+    const e = await findAllEarnings(profile?.value?.id || 1, pagination.value);
+    earnings.value = e.data;
   } catch (error) {
     console.error(error);
   }
@@ -187,8 +194,8 @@ const fetchEarnings = async () => {
 
 const fetchExpenses = async () => {
   try {
-    const e = await findAllExpenses(profile?.value?.id || 1);
-    expenses.value = e;
+    const e = await findAllExpenses(profile?.value?.id || 1, pagination.value);
+    expenses.value = e.data;
   } catch (error) {
     console.error(error);
   }

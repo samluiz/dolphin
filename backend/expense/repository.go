@@ -2,6 +2,7 @@ package expense
 
 import (
 	t "dolphin/backend/shared/types"
+	"fmt"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -9,7 +10,7 @@ import (
 
 type Repository interface {
 	FindAll() ([]t.ExpenseOutput, error)
-	FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error)
+	FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error)
 	FindByID(id int) (t.ExpenseToUpdate, error)
 	Create(e t.ExpenseInput) (t.Expense, error)
 	Update(id int, e t.ExpenseUpdate) (t.Expense, error)
@@ -44,16 +45,39 @@ func (r *repository) FindAll() ([]t.ExpenseOutput, error) {
 	return expenses, nil
 }
 
-func (r *repository) FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error) {
+func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error) {
 	var expenses []t.ExpenseOutput
 
-	err := r.db.Select(&expenses, `
+	total, err := r.countByProfileID(profileID)
+
+	if err != nil {
+		return t.PaginatedResult{}, err
+	}
+
+	dbPagination, err := pagination.GetValues(total)
+
+	if err != nil {
+		return t.PaginatedResult{}, err
+	}
+
+	validOrderBys := map[string]bool{"id": true, "description": true, "amount": true, "category": true, "created_at": true, "updated_at": true}
+	validSortBys := map[string]bool{"ASC": true, "DESC": true, "asc": true, "desc": true}
+
+	if !validOrderBys[dbPagination.OrderBy] {
+		return t.PaginatedResult{}, fmt.Errorf("invalid order by value: %s", dbPagination.OrderBy)
+	}
+
+	if !validSortBys[dbPagination.SortBy] {
+		return t.PaginatedResult{}, fmt.Errorf("invalid sort by value: %s", dbPagination.SortBy)
+	}
+
+	query := fmt.Sprintf(`
 	SELECT
 		e.id,
 		e.description,
 		e.amount,
 		c.description AS category,
-		(SELECT SUM(amount) FROM expenses WHERE profile_id = ?) AS sub_total
+		(SELECT SUM(amount) FROM expenses WHERE profile_id = e.profile_id) AS sub_total
 	FROM
 		expenses AS e
 	JOIN
@@ -61,13 +85,31 @@ func (r *repository) FindAllByProfileID(profileID int) ([]t.ExpenseOutput, error
 	JOIN
 		categories AS c ON ec.category_id = c.id
 	WHERE
-		e.profile_id = ?`, profileID, profileID)
+		e.profile_id = ?
+	ORDER BY e.%s %s
+	LIMIT ? OFFSET ?`, dbPagination.OrderBy, dbPagination.SortBy)
+
+	err = r.db.Select(&expenses, query, profileID, dbPagination.Limit, dbPagination.Offset)
 
 	if err != nil {
-		return nil, err
+		return t.PaginatedResult{}, err
 	}
 
-	return expenses, nil
+	result := t.PaginatedResult{
+		Pagination: t.PaginationOutput{
+			Page:       dbPagination.Offset,
+			Size:       dbPagination.Limit,
+			TotalPages: dbPagination.TotalPages,
+			TotalItems: total,
+			NextPage:  dbPagination.NextPage,
+			PrevPage:  dbPagination.PrevPage,
+			OrderBy:   dbPagination.OrderBy,
+			SortBy:    dbPagination.SortBy,
+	},
+		Data: expenses,
+	}
+
+	return result, nil
 }
 
 func (r *repository) FindByID(id int) (t.ExpenseToUpdate, error) {
@@ -147,6 +189,18 @@ func (r *repository) Delete(id int) error {
 	}
 
 	return nil
+}
+
+func (r *repository) countByProfileID(profileID int) (int, error) {
+	var total int
+
+	err := r.db.Get(&total, "SELECT COUNT(*) FROM expenses WHERE profile_id = ?", profileID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return total, nil
 }
 
 func NewRepository(db *sqlx.DB) Repository {

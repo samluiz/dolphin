@@ -4,7 +4,7 @@ import t "dolphin/backend/shared/types"
 
 type Service interface {
 	FindAll() ([]t.EarningOutput, error)
-	FindAllByProfileID(profileID int) ([]t.EarningOutput, error)
+	FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error)
 	FindByID(id int) (t.EarningToUpdate, error)
 	Create(e t.EarningInput) (t.Earning, error)
 	Update(id int, e t.EarningUpdate) (t.Earning, error)
@@ -19,8 +19,8 @@ func (s *service) FindAll() ([]t.EarningOutput, error) {
 	return s.r.FindAll()
 }
 
-func (s *service) FindAllByProfileID(profileID int) ([]t.EarningOutput, error) {
-	return s.r.FindAllByProfileID(profileID)
+func (s *service) FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error) {
+	return s.r.FindAllByProfileID(profileID, pagination)
 }
 
 func (s *service) FindByID(id int) (t.EarningToUpdate, error) {

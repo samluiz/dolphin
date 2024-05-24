@@ -62,7 +62,7 @@ fetchAppVersion();
 <template>
   <ThemeSwitcher @toggle-theme="toggleTheme" :is-dark-mode="isDarkMode">
     <div
-      class="h-screen w-screen bg-light dark:bg-dark p-8"
+      class="min-h-screen w-screen bg-light dark:bg-dark p-8"
       :class="{
         dark: isDarkMode,
       }"

@@ -14,8 +14,8 @@ export function FindAll() {
   return window['go']['expense']['service']['FindAll']();
 }
 
-export function FindAllByProfileID(arg1) {
-  return window['go']['expense']['service']['FindAllByProfileID'](arg1);
+export function FindAllByProfileID(arg1, arg2) {
+  return window['go']['expense']['service']['FindAllByProfileID'](arg1, arg2);
 }
 
 export function FindByID(arg1) {
