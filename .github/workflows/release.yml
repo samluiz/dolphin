@@ -95,16 +95,19 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_MacOS
+        path: ./Dolphin_MacOS
 
     - name: Download Windows amd64 installer
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_Windows_Setup
+        path: ./Dolphin_Windows_Setup
 
     - name: Download Linux amd64 binary
       uses: actions/download-artifact@v4
       with:
         name: Dolphin_Linux
+        path: ./Dolphin_Linux
 
     - name: Create Release
       id: create_release
