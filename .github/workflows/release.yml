@@ -69,7 +69,7 @@ jobs:
 
     - name: Zip Windows amd64 installer
       run: |
-        zip -r Dolphin_Windows_Setup.zip . /Dolphin_Windows_Amd64-Setup.exe
+        zip -r Dolphin_Windows_Setup.zip ./build/bin/Dolphin_Windows_Amd64-Setup.exe
 
     - name: Build for Linux/amd64
       run: |
