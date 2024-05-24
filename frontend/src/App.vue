@@ -87,7 +87,7 @@ fetchAppVersion();
 
       <div
         class="grid place-items-center p-8 text-center text-black dark:text-white"
-        v-if="!profileStore.profile"
+        v-if="profileStore.hasProfileCreated() && !profileStore.profile"
       >
         <ProfileSelector />
       </div>
@@ -105,9 +105,9 @@ fetchAppVersion();
       />
 
       <div class="absolute bottom-0 left-0 p-4">
-        <span class="text-xs opacity-70 text-black dark:text-white"
-          >v{{ appVersion }}</span
-        >
+        <span class="text-xs opacity-70 text-black dark:text-white">{{
+          appVersion
+        }}</span>
       </div>
     </div>
   </ThemeSwitcher>
