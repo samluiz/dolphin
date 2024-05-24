@@ -65,11 +65,11 @@ jobs:
       run: |
         wails build -platform windows/amd64 -ldflags "-X main.Version=$GITHUB_REF_NAME" --nsis   
         rm ./build/bin/Dolphin.exe
-        mv ./build/bin/Dolphin-amd64-installer.exe ./build/bin/Dolphin_Windows_Amd64-Setup.exe
+        mv ./build/bin/Dolphin-amd64-installer.exe ./Dolphin_Windows_Amd64-Setup.exe
 
     - name: Zip Windows amd64 installer
       run: |
-        zip -r Dolphin_Windows_Setup.zip ./build/bin/Dolphin_Windows_Amd64-Setup.exe
+        zip -r Dolphin_Windows_Setup.zip ./Dolphin_Windows_Amd64-Setup.exe
 
     - name: Build for Linux/amd64
       run: |
