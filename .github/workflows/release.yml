@@ -127,9 +127,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./Dolphin-MacOS
-          ./Dolphin_Windows_Amd64-Setup
-          ./Dolphin_Windows_Arm64-Setup
-          ./Dolphin_Linux_Amd64
+          ./Dolphin-MacOS.zip
+          ./Dolphin_Windows_Amd64-Setup.zip
+          ./Dolphin_Windows_Arm64-Setup.zip
+          ./Dolphin_Linux_Amd64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
