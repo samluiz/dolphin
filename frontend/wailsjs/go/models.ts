@@ -73,6 +73,8 @@ export namespace types {
 	    description: string;
 	    amount: number;
 	    sub_total: number;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new EarningOutput(source);
@@ -84,6 +86,8 @@ export namespace types {
 	        this.description = source["description"];
 	        this.amount = source["amount"];
 	        this.sub_total = source["sub_total"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class EarningToUpdate {
@@ -160,6 +164,8 @@ export namespace types {
 	    amount: number;
 	    category: string;
 	    sub_total: number;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new ExpenseOutput(source);
@@ -172,6 +178,8 @@ export namespace types {
 	        this.amount = source["amount"];
 	        this.category = source["category"];
 	        this.sub_total = source["sub_total"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 	export class ExpenseToUpdate {

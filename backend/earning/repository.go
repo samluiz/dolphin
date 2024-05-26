@@ -60,7 +60,7 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 	}
 
 	query := fmt.Sprintf(`
-	SELECT e.id, e.description, e.amount, (SELECT SUM(amount) FROM earnings WHERE profile_id = e.profile_id) AS sub_total FROM earnings AS e WHERE profile_id = ?
+	SELECT e.id, e.description, e.amount, (SELECT SUM(amount) FROM earnings WHERE profile_id = e.profile_id) AS sub_total, e.created_at, e.updated_at FROM earnings AS e WHERE profile_id = ?
 	ORDER BY e.%s %s
 	LIMIT ? OFFSET ?`, dbPagination.OrderBy, dbPagination.SortBy)
 
@@ -71,8 +71,8 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 
 	result := t.PaginatedResult{
 		Pagination: t.PaginationOutput{
-			Page:       dbPagination.Offset,
-			Size:       dbPagination.Limit,
+			Page:       pagination.Page,
+			Size:       pagination.Size,
 			TotalPages: dbPagination.TotalPages,
 			TotalItems: total,
 			NextPage:  dbPagination.NextPage,

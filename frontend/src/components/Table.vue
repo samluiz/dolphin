@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import EditIcon from "./ui/icons/EditIcon.vue";
 import DeleteIcon from "./ui/icons/DeleteIcon.vue";
 import IconButton from "./ui/IconButton.vue";
 import AddIcon from "./ui/icons/AddIcon.vue";
-import { maskCurrency } from "@/shared/utils";
+import { maskCurrency, maskDate } from "@/shared/utils";
+import SortArrowIcon from "./ui/icons/SortArrowIcon.vue";
+import PaginationTab from "./ui/PaginationTab.vue";
 import DestructiveActionModal from "./DestructiveActionModal.vue";
 import EditItemModal from "./EditItemModal.vue";
 import AddItemModal from "./AddItemModal.vue";
@@ -27,24 +29,51 @@ import ProfileSelector from "./ProfileSelector.vue";
 import { useProfileStore } from "@/stores/ProfileStore";
 import { storeToRefs } from "pinia";
 import EditProfileModal from "./EditProfileModal.vue";
+import { Tab } from "@/shared/types";
 
 const profileStore = useProfileStore();
 
 const { profile } = storeToRefs(profileStore);
 
-const pagination = ref<types.Pagination>({
+const earningsPagination = ref<types.PaginationOutput>({
   page: 1,
   size: 5,
-  order_by: "created_at",
-  sort_by: "desc",
+  total_pages: 1,
+  total_items: 1,
+  next_page: 1,
+  prev_page: 1,
+  order_by: "",
+  sort_by: "",
 });
+
+const expensesPagination = ref<types.PaginationOutput>({
+  page: 1,
+  size: 5,
+  total_pages: 1,
+  total_items: 1,
+  next_page: 1,
+  prev_page: 1,
+  order_by: "",
+  sort_by: "",
+});
+
+const getSelectedTabFromLocalStorage = () => {
+  const tab = localStorage.getItem("selectedTab");
+  if (tab) {
+    selectedTab.value = tab as Tab;
+  }
+};
+
+const setSelectedTabOnLocalStorage = (tab: Tab) => {
+  localStorage.setItem("selectedTab", tab);
+};
 
 const isDeleteTableDataModalOpen = ref(false);
 const isUpdateProfileModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const isAddModalOpen = ref(false);
 const selectedRowId = ref(0);
-const selectedTabId = ref(1);
+const selectedTab = ref();
 
 const openDeleteTableDataModal = (id: number) => {
   selectedRowId.value = id;
@@ -57,7 +86,7 @@ const closeDeleteTableDataModal = () => {
 };
 
 const deleteTableData = async () => {
-  if (selectedTabId.value === 1) {
+  if (selectedTab.value === Tab.EARNING) {
     await deleteEarning(selectedRowId.value);
   } else {
     await deleteExpense(selectedRowId.value);
@@ -85,7 +114,7 @@ const closeUpdateProfileModal = () => {
 };
 
 const editItem = (formData: types.EarningUpdate | types.ExpenseUpdate) => {
-  if (selectedTabId.value === 1) {
+  if (selectedTab.value === Tab.EARNING) {
     const updatedEarning: types.EarningUpdate = {
       description: formData.description,
       amount: formData.amount,
@@ -129,7 +158,7 @@ const addItem = (formData: types.EarningUpdate | types.ExpenseUpdate) => {
     return;
   }
 
-  if (selectedTabId.value === 1) {
+  if (selectedTab.value === Tab.EARNING) {
     addEarning(formData);
   } else {
     addExpense(formData);
@@ -169,15 +198,7 @@ function addExpense(formData: types.EarningUpdate | types.ExpenseUpdate) {
     });
 }
 
-interface Tab {
-  id: number;
-  name: string;
-}
-
-const tabs: Tab[] = [
-  { id: 1, name: "Earnings" },
-  { id: 2, name: "Expenses" },
-];
+const tabs: Tab[] = [Tab.EARNING, Tab.EXPENSE];
 
 const earnings = ref<types.EarningOutput[]>([]);
 const expenses = ref<types.ExpenseOutput[]>([]);
@@ -185,8 +206,12 @@ const isLoading = ref(false);
 
 const fetchEarnings = async () => {
   try {
-    const e = await findAllEarnings(profile?.value?.id || 1, pagination.value);
+    const e = await findAllEarnings(
+      profile?.value?.id || 1,
+      earningsPagination.value,
+    );
     earnings.value = e.data;
+    earningsPagination.value = e.pagination;
   } catch (error) {
     console.error(error);
   }
@@ -194,29 +219,68 @@ const fetchEarnings = async () => {
 
 const fetchExpenses = async () => {
   try {
-    const e = await findAllExpenses(profile?.value?.id || 1, pagination.value);
+    const e = await findAllExpenses(
+      profile?.value?.id || 1,
+      expensesPagination.value,
+    );
     expenses.value = e.data;
+    expensesPagination.value = e.pagination;
   } catch (error) {
     console.error(error);
   }
+};
+
+const changePage = (page: number) => {
+  if (selectedTab.value === Tab.EARNING) {
+    earningsPagination.value.page = page;
+  } else {
+    expensesPagination.value.page = page;
+  }
+  fetchData();
 };
 
 const fetchData = async () => {
   isLoading.value = true;
   await fetchEarnings();
   await fetchExpenses();
+  console.log(earningsPagination.value);
+  console.log(expensesPagination.value);
   isLoading.value = false;
 };
 
 onMounted(() => {
+  getSelectedTabFromLocalStorage();
+
+  watch(selectedTab, (newVal) => {
+    setSelectedTabOnLocalStorage(newVal);
+  });
+
   fetchData();
 });
 
+const handleChangeTab = (tab: Tab) => {
+  selectedTab.value = tab;
+  fetchData();
+};
+
 const tableData = computed(
   (): types.EarningOutput[] | types.ExpenseOutput[] => {
-    return selectedTabId.value === 1 ? earnings.value : expenses.value;
+    return selectedTab.value === Tab.EARNING ? earnings.value : expenses.value;
   },
 );
+
+const sortTableData = (orderBy: string) => {
+  if (selectedTab.value === Tab.EARNING) {
+    earningsPagination.value.order_by = orderBy;
+    earningsPagination.value.sort_by =
+      earningsPagination.value.sort_by === "ASC" ? "DESC" : "ASC";
+  } else {
+    expensesPagination.value.order_by = orderBy;
+    expensesPagination.value.sort_by =
+      expensesPagination.value.sort_by === "ASC" ? "DESC" : "ASC";
+  }
+  fetchData();
+};
 
 const totalEarnings = computed(() => {
   return earnings.value && earnings.value.length > 0
@@ -239,15 +303,17 @@ const balance = computed(() => {
   <div class="flex justify-center items-center mb-4 gap-2">
     <button
       v-for="tab in tabs"
-      :key="tab.id"
-      @click="selectedTabId = tab.id"
-      class="py-1.5 px-2 text-black dark:text-white rounded-sm"
+      :key="tab"
+      @click="handleChangeTab(tab)"
+      class="py-1.5 px-2 duration-200 text-black dark:text-white rounded-sm"
       :class="{
-        'duration-200 bg-primary dark:bg-secondary text-black dark:text-black':
-          selectedTabId === tab.id,
+        'bg-primary dark:bg-secondary text-black dark:text-black':
+          selectedTab === tab,
+        'hover:bg-dark dark:hover:bg-light hover:bg-opacity-30':
+          selectedTab !== tab,
       }"
     >
-      {{ tab.name }}
+      {{ tab }}
     </button>
     <div class="grid place-items-center grid-flow-col absolute right-10">
       <ProfileSelector
@@ -263,57 +329,122 @@ const balance = computed(() => {
       </button>
     </div>
   </div>
-
-  <table
-    v-if="tableData && tableData.length > 0"
-    class="min-w-full rounded-lg leading-normal"
-  >
-    <thead>
-      <tr class="text-center">
-        <TableHeader>Description</TableHeader>
-        <TableHeader>Amount</TableHeader>
-        <TableHeader v-if="selectedTabId === 2">Category</TableHeader>
-        <TableHeader></TableHeader>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="text-center odd:bg-primary even:bg-secondary text-black"
-        v-for="item in tableData"
-        :key="item.id"
-      >
-        <TableData>{{ item.description }}</TableData>
-        <TableData>{{ maskCurrency(item.amount) }}</TableData>
-        <TableData v-if="selectedTabId === 2">{{
-          (item as types.ExpenseOutput).category
-        }}</TableData>
-        <TableData class="flex flex-row justify-end">
-          <div class="flex flex-row justify-evenly w-20">
-            <IconButton class="text-black" @click="openEditModal(item.id)">
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              class="text-black"
-              @click="openDeleteTableDataModal(item.id)"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </TableData>
-      </tr>
-    </tbody>
-  </table>
+  <div v-if="tableData && tableData.length > 0">
+    <table class="min-w-full rounded-lg leading-normal">
+      <thead>
+        <tr class="text-center">
+          <TableHeader
+            >Description
+            <SortArrowIcon
+              @click="sortTableData('description')"
+              :class="{
+                'rotate-180':
+                  (earningsPagination.order_by.toLowerCase() ===
+                    'description' &&
+                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
+                  (expensesPagination.order_by.toLowerCase() ===
+                    'description' &&
+                    expensesPagination.sort_by.toLowerCase() === 'asc'),
+              }"
+          /></TableHeader>
+          <TableHeader
+            >Amount
+            <SortArrowIcon
+              @click="sortTableData('amount')"
+              :class="{
+                'rotate-180':
+                  (earningsPagination.order_by.toLowerCase() === 'amount' &&
+                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
+                  (expensesPagination.order_by.toLowerCase() === 'amount' &&
+                    expensesPagination.sort_by.toLowerCase() === 'asc'),
+              }"
+          /></TableHeader>
+          <TableHeader v-if="selectedTab === Tab.EXPENSE"
+            >Category
+            <SortArrowIcon
+              @click="sortTableData('category')"
+              :class="{
+                'rotate-180':
+                  expensesPagination.order_by.toLowerCase() === 'category' &&
+                  expensesPagination.sort_by.toLowerCase() === 'asc',
+              }"
+          /></TableHeader>
+          <TableHeader
+            >Created
+            <SortArrowIcon
+              @click="sortTableData('created_at')"
+              :class="{
+                'rotate-180':
+                  (earningsPagination.order_by.toLowerCase() === 'created_at' &&
+                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
+                  (expensesPagination.order_by.toLowerCase() === 'created_at' &&
+                    expensesPagination.sort_by.toLowerCase() === 'asc'),
+              }"
+          /></TableHeader>
+          <TableHeader
+            >Updated
+            <SortArrowIcon
+              @click="sortTableData('updated_at')"
+              :class="{
+                'rotate-180':
+                  (earningsPagination.order_by.toLowerCase() === 'updated_at' &&
+                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
+                  (expensesPagination.order_by.toLowerCase() === 'updated_at' &&
+                    expensesPagination.sort_by.toLowerCase() === 'asc'),
+              }"
+          /></TableHeader>
+          <TableHeader></TableHeader>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="text-center odd:bg-primary even:bg-secondary text-black"
+          v-for="item in tableData"
+          :key="item.id"
+        >
+          <TableData>{{ item.description }}</TableData>
+          <TableData>{{ maskCurrency(item.amount) }}</TableData>
+          <TableData v-if="selectedTab === Tab.EXPENSE">{{
+            (item as types.ExpenseOutput).category
+          }}</TableData>
+          <TableData>{{ maskDate(item.created_at) }}</TableData>
+          <TableData>{{ maskDate(item.updated_at) }}</TableData>
+          <TableData class="flex flex-row justify-end">
+            <div class="flex flex-row justify-evenly w-20">
+              <IconButton class="text-black" @click="openEditModal(item.id)">
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                class="text-black"
+                @click="openDeleteTableDataModal(item.id)"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          </TableData>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div v-else class="text-center text-black dark:text-white py-4">
     No data available yet
   </div>
 
-  <div class="w-full mt-4 flex items-start justify-center">
+  <div class="w-full mt-4 flex items-center justify-center">
     <div class="flex-1">
       <IconButton class="text-black dark:text-white" @click="openAddModal">
         <AddIcon />
       </IconButton>
     </div>
-    <div class="flex-2 grid grid-flow-col gap-2">
+    <div class="flex-1 self-center">
+      <PaginationTab
+        :pagination="
+          selectedTab === Tab.EARNING ? earningsPagination : expensesPagination
+        "
+        @on-page-change="changePage"
+      />
+    </div>
+    <div class="flex-1 grid grid-flow-col gap-2 text-sm min-w-fit">
       <span
         class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
         >Total Earnings: {{ maskCurrency(totalEarnings) }}</span
@@ -342,16 +473,16 @@ const balance = computed(() => {
     @on-cancel="closeDeleteTableDataModal"
   />
   <EditItemModal
-    v-if="isEditModalOpen && selectedTabId"
+    v-if="isEditModalOpen && selectedTab"
     :selected-row-id="selectedRowId"
     @editItem="editItem"
-    :selected-tab-id="selectedTabId"
+    :selected-tab="selectedTab"
     :is-open="isEditModalOpen"
     @on-cancel="closeEditModal"
   />
   <AddItemModal
-    v-if="isAddModalOpen && selectedTabId"
-    :selected-tab-id="selectedTabId"
+    v-if="isAddModalOpen && selectedTab"
+    :selected-tab="selectedTab"
     :is-open="isAddModalOpen"
     @addItem="addItem"
     @on-cancel="closeAddModal"

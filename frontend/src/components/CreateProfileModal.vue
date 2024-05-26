@@ -6,6 +6,7 @@ import ConfirmButton from "./ui/ConfirmButton.vue";
 import CancelButton from "./ui/CancelButton.vue";
 import Dialog from "./ui/Dialog.vue";
 import { useProfileStore } from "@/stores/ProfileStore";
+import { types } from "wailsjs/go/models";
 
 const profileStore = useProfileStore();
 
@@ -26,7 +27,7 @@ function onSubmit(): void {
       description: description.value,
       is_default: !profileStore.hasProfileCreated() ? true : isDefault.value,
     })
-    .then((data) => {
+    .then((data: void) => {
       emit("on-profile-create", data);
       emit("on-cancel");
     });

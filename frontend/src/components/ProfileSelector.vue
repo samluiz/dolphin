@@ -3,7 +3,7 @@ import { ref, defineEmits, computed, toRefs } from "vue";
 import { useProfileStore } from "@/stores/ProfileStore";
 import { types } from "../../wailsjs/go/models";
 import CreateProfileModal from "./CreateProfileModal.vue";
-import ArrowIcon from "./ui/icons/ArrowIcon.vue";
+import SelectArrowIcon from "./ui/icons/SelectArrowIcon.vue";
 import { storeToRefs } from "pinia";
 import AddIcon from "./ui/icons/AddIcon.vue";
 
@@ -43,24 +43,30 @@ const onProfileCreate = () => {
   emit("on-profile-change");
 };
 
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value;
+const openDropdown = () => {
+  isDropdownOpen.value = true;
+};
+
+const closeDropdown = () => {
+  setTimeout(() => (isDropdownOpen.value = false), 1000);
 };
 
 const otherProfiles = computed(() => {
   return (
     profiles.value &&
-    profiles.value.filter((profile) => profile.id !== profileStore.profile?.id)
+    profiles.value.filter(
+      (profile: types.Profile) => profile.id !== profileStore.profile?.id,
+    )
   );
 });
 </script>
 
 <template>
-  <div @click="toggleDropdown">
+  <div @mouseover="openDropdown" @mouseleave="closeDropdown">
     <button
       class="py-1.5 px-2 duration-100 grid min-w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
     >
-      {{ profile ? profile.description : "Select profile" }} <ArrowIcon />
+      {{ profile ? profile.description : "Select profile" }} <SelectArrowIcon />
     </button>
     <ul
       v-if="isDropdownOpen"

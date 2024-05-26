@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { Ref, onMounted, ref, toRefs } from "vue";
+import { PropType, Ref, onMounted, ref, toRefs } from "vue";
 import Dialog from "./ui/Dialog.vue";
 import Input from "./ui/Input.vue";
-import {
-  FindAll as findAllCategories,
-} from "../../wailsjs/go/category/service";
+import { FindAll as findAllCategories } from "../../wailsjs/go/category/service";
 import { types } from "wailsjs/go/models";
 import Select from "./ui/Select.vue";
 import ConfirmButton from "./ui/ConfirmButton.vue";
 import CancelButton from "./ui/CancelButton.vue";
+import { Tab } from "@/shared/types";
 
 const props = defineProps({
   isOpen: Boolean,
-  selectedTabId: Number,
+  selectedTab: String as PropType<Tab>,
 });
 
-const { isOpen, selectedTabId } = toRefs(props);
+const { isOpen, selectedTab } = toRefs(props);
 
 const emit = defineEmits(["addItem", "on-cancel"]);
 
@@ -50,7 +49,7 @@ function onSubmit(): void {
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <h1 class="text-2xl text-black dark:text-white">
-        Add {{ selectedTabId === 1 ? "earning" : "expense" }}
+        Add {{ selectedTab === Tab.EARNING ? "earning" : "expense" }}
       </h1>
       <Input
         :required="true"
@@ -71,7 +70,7 @@ function onSubmit(): void {
       <Select
         :options="categories"
         :required="true"
-        v-if="selectedTabId === 2"
+        v-if="selectedTab === Tab.EXPENSE"
         :name="'category'"
         :title="'Category'"
         :model-value="(formData as types.ExpenseUpdate).category_id"

@@ -30,4 +30,6 @@ type EarningOutput struct {
 	Description string  `json:"description" db:"description"`
 	Amount      float64 `json:"amount" db:"amount"`
 	SubTotal    float64 `json:"sub_total" db:"sub_total"`
+	CreatedAt string `json:"created_at" db:"created_at"`
+	UpdatedAt string `json:"updated_at" db:"updated_at"`
 }

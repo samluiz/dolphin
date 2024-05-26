@@ -4,3 +4,7 @@ export function maskCurrency(value: number): string {
     currency: "USD",
   });
 }
+
+export function maskDate(date: string): string {
+  return new Date(date).toLocaleDateString("en-US");
+}

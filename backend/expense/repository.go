@@ -77,7 +77,8 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 		e.description,
 		e.amount,
 		c.description AS category,
-		(SELECT SUM(amount) FROM expenses WHERE profile_id = e.profile_id) AS sub_total
+		(SELECT SUM(amount) FROM expenses WHERE profile_id = e.profile_id) AS sub_total,
+		e.created_at, e.updated_at
 	FROM
 		expenses AS e
 	JOIN
@@ -97,8 +98,8 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 
 	result := t.PaginatedResult{
 		Pagination: t.PaginationOutput{
-			Page:       dbPagination.Offset,
-			Size:       dbPagination.Limit,
+			Page:       pagination.Page,
+			Size:       pagination.Size,
 			TotalPages: dbPagination.TotalPages,
 			TotalItems: total,
 			NextPage:  dbPagination.NextPage,

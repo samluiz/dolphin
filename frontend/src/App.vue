@@ -34,14 +34,22 @@ const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value;
 };
 
-onMounted(() => {
+const getThemeFromLocalStorage = () => {
   const isDark = localStorage.getItem("isDarkMode");
   if (isDark) {
     isDarkMode.value = JSON.parse(isDark);
   }
+};
+
+const setThemeOnLocalStorage = (darkMode: boolean) => {
+  localStorage.setItem("isDarkMode", JSON.stringify(darkMode));
+};
+
+onMounted(() => {
+  getThemeFromLocalStorage();
 
   watch(isDarkMode, (newVal) => {
-    localStorage.setItem("isDarkMode", JSON.stringify(newVal));
+    setThemeOnLocalStorage(newVal);
   });
 
   fetchData();

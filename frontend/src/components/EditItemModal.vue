@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, onMounted, ref, toRefs, watch } from "vue";
+import { PropType, Ref, onMounted, ref, toRefs, watch } from "vue";
 import Dialog from "./ui/Dialog.vue";
 import Input from "./ui/Input.vue";
 import Select from "./ui/Select.vue";
@@ -9,14 +9,15 @@ import { FindByID as findExpenseById } from "../../wailsjs/go/expense/service";
 import { types } from "wailsjs/go/models";
 import ConfirmButton from "./ui/ConfirmButton.vue";
 import CancelButton from "./ui/CancelButton.vue";
+import { Tab } from "@/shared/types";
 
 const props = defineProps({
   isOpen: Boolean,
-  selectedTabId: Number,
+  selectedTab: String as PropType<Tab>,
   selectedRowId: Number,
 });
 
-const { isOpen, selectedTabId, selectedRowId } = toRefs(props);
+const { isOpen, selectedTab, selectedRowId } = toRefs(props);
 
 const emit = defineEmits(["editItem", "on-cancel"]);
 
@@ -24,12 +25,12 @@ const currentRow = ref<types.EarningToUpdate | types.ExpenseToUpdate>();
 const categories = ref<types.Category[]>([]);
 
 onMounted(() => {
-  fetchData(selectedTabId?.value!, selectedRowId?.value!);
+  fetchData(selectedTab?.value!, selectedRowId?.value!);
 });
 
-const fetchData = async (tabId: number, rowId: number) => {
+const fetchData = async (tab: Tab, rowId: number) => {
   await fetchCategories();
-  if (tabId === 1) {
+  if (tab === Tab.EARNING) {
     try {
       const earning = await findEarningById(rowId);
       currentRow.value = earning;
@@ -81,7 +82,7 @@ function onSubmit(): void {
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <h1 class="text-2xl text-black dark:text-white">
-        Edit {{ selectedTabId === 1 ? "earning" : "expense" }}
+        Edit {{ selectedTab === Tab.EARNING ? "earning" : "expense" }}
       </h1>
       <Input
         :required="true"
@@ -89,7 +90,9 @@ function onSubmit(): void {
         :title="'Description'"
         :type="'text'"
         :model-value="formData.description"
-        @update:model-value="(newValue) => (formData.description = newValue)"
+        @update:model-value="
+          (newValue: string) => (formData.description = newValue)
+        "
       />
       <Input
         :required="true"
@@ -97,17 +100,17 @@ function onSubmit(): void {
         :title="'Amount'"
         :type="'number'"
         :model-value="formData.amount"
-        @update:model-value="(newValue) => (formData.amount = newValue)"
+        @update:model-value="(newValue: number) => (formData.amount = newValue)"
       />
       <Select
         :options="categories"
         :required="true"
-        v-if="selectedTabId === 2"
+        v-if="selectedTab === Tab.EXPENSE"
         :name="'category'"
         :title="'Category'"
         :model-value="formData && (formData as types.ExpenseUpdate).category_id"
         @update:model-value="
-          (newValue) =>
+          (newValue: number) =>
             ((formData as types.ExpenseUpdate).category_id = newValue)
         "
       />
