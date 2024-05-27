@@ -113,5 +113,6 @@ onMounted(() => {
     :is-open="isDeleteProfileModalOpen"
     @on-confirm="deleteProfile"
     @on-cancel="closeDeleteProfileModal"
+    :title="'Delete profile'"
   />
 </template>

@@ -326,7 +326,9 @@ const handleSizeChange = (n: number) => {
         {{ tab }}
       </button>
     </div>
-    <div class="w-full flex justify-end gap-2 text-sm">
+    <div
+      class="w-full flex justify-end gap-2 text-sm text-black dark:text-white"
+    >
       <span>Items per page:</span>
       <div v-for="n in [5, 10]">
         <span
@@ -483,6 +485,7 @@ const handleSizeChange = (n: number) => {
     :is-open="isDeleteTableDataModalOpen"
     @on-confirm="deleteTableData"
     @on-cancel="closeDeleteTableDataModal"
+    :title="selectedTab === Tab.EARNING ? 'Delete earning' : 'Delete expense'"
   />
   <EditItemModal
     v-if="isEditModalOpen && selectedTab"

@@ -23,9 +23,22 @@ const { isDarkMode } = toRefs(props);
       @click="$emit('toggle-theme')"
       class="p-2 text-black dark:text-white rounded-lg"
     >
-      <span v-if="isDarkMode"><LightModeIcon /></span>
-      <span v-else><DarkModeIcon /></span>
+      <transition name="icon-fade" mode="out-in">
+        <span v-if="isDarkMode" key="dark"><LightModeIcon /></span>
+        <span v-else key="light"><DarkModeIcon /></span>
+      </transition>
     </button>
   </div>
   <slot></slot>
 </template>
+
+<style scoped>
+.icon-fade-enter-active,
+.icon-fade-leave-active {
+  transition: opacity 0.2s ease-out;
+}
+.icon-fade-enter,
+.icon-fade-leave-to {
+  opacity: 0;
+}
+</style>

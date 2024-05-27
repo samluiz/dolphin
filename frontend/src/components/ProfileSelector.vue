@@ -68,28 +68,30 @@ const otherProfiles = computed(() => {
     >
       {{ profile ? profile.description : "Select profile" }} <SelectArrowIcon />
     </button>
-    <ul
-      v-if="isDropdownOpen"
-      class="shadow-lg flex flex-col rounded-sm ring-1 ring-black ring-opacity-5 focus:outline-none absolute min-w-24 bg-light dark:bg-dark text-black dark:text-white z-50"
-    >
-      <li
-        v-for="profile in otherProfiles"
-        :key="profile.id"
-        @click="selectProfile(profile)"
-        class="cursor-pointer p-2 text-black min-w-24 dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+    <transition name="fade">
+      <ul
+        v-if="isDropdownOpen"
+        class="shadow-lg flex flex-col rounded-sm ring-1 ring-black ring-opacity-5 focus:outline-none absolute min-w-24 bg-light dark:bg-dark text-black dark:text-white z-50"
       >
-        {{ profile.description }}
-      </li>
-      <li
-        @click="openCreateProfileModal"
-        class="cursor-pointer flex flex-col min-w-24 p-2 text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
-      >
-        <AddIcon
-          class="text-black dark:text-white justify-self-center self-center"
+        <li
+          v-for="profile in otherProfiles"
+          :key="profile.id"
+          @click="selectProfile(profile)"
+          class="cursor-pointer p-2 text-black min-w-24 dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        >
+          {{ profile.description }}
+        </li>
+        <li
           @click="openCreateProfileModal"
-        />
-      </li>
-    </ul>
+          class="cursor-pointer flex flex-col min-w-24 p-2 text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        >
+          <AddIcon
+            class="text-black dark:text-white justify-self-center self-center"
+            @click="openCreateProfileModal"
+          />
+        </li>
+      </ul>
+    </transition>
   </div>
 
   <CreateProfileModal
@@ -100,3 +102,14 @@ const otherProfiles = computed(() => {
     @on-cancel="closeCreateProfileModal"
   />
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

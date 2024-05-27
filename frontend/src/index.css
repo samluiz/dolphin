@@ -27,5 +27,6 @@
     color: white;
     font-family: "sunflower", sans-serif;
     font-weight: 300;
+    -webkit-font-smoothing: antialiased !important;
   }
 }
