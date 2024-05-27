@@ -71,6 +71,14 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 		return t.PaginatedResult{}, fmt.Errorf("invalid sort by value: %s", dbPagination.SortBy)
 	}
 
+	var orderBy string
+
+	if dbPagination.OrderBy == "category" {
+		orderBy = "c.description"
+	} else {
+		orderBy = "e." + dbPagination.OrderBy
+	}
+
 	query := fmt.Sprintf(`
 	SELECT
 		e.id,
@@ -87,8 +95,8 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 		categories AS c ON ec.category_id = c.id
 	WHERE
 		e.profile_id = ?
-	ORDER BY e.%s %s
-	LIMIT ? OFFSET ?`, dbPagination.OrderBy, dbPagination.SortBy)
+	ORDER BY %s %s
+	LIMIT ? OFFSET ?`, orderBy, dbPagination.SortBy)
 
 	err = r.db.Select(&expenses, query, profileID, dbPagination.Limit, dbPagination.Offset)
 

@@ -12,6 +12,7 @@ import EditItemModal from "./EditItemModal.vue";
 import AddItemModal from "./AddItemModal.vue";
 import TableHeader from "./ui/TableHeader.vue";
 import TableData from "./ui/TableData.vue";
+import BalanceTab from "./BalanceTab.vue";
 import {
   Create as createEarning,
   Update as updateEarning,
@@ -61,6 +62,8 @@ const getSelectedTabFromLocalStorage = () => {
   const tab = localStorage.getItem("selectedTab");
   if (tab) {
     selectedTab.value = tab as Tab;
+  } else {
+    selectedTab.value = Tab.EARNING;
   }
 };
 
@@ -282,40 +285,19 @@ const sortTableData = (orderBy: string) => {
   fetchData();
 };
 
-const totalEarnings = computed(() => {
-  return earnings.value && earnings.value.length > 0
-    ? earnings.value[0].sub_total
-    : 0;
-});
-
-const totalExpenses = computed(() => {
-  return expenses.value && expenses.value.length > 0
-    ? expenses.value[0].sub_total
-    : 0;
-});
-
-const balance = computed(() => {
-  return totalEarnings.value - totalExpenses.value;
-});
+const handleSizeChange = (n: number) => {
+  if (selectedTab.value === Tab.EARNING) {
+    earningsPagination.value.size = n;
+  } else {
+    expensesPagination.value.size = n;
+  }
+  fetchData();
+};
 </script>
 
 <template>
-  <div class="flex justify-center items-center mb-4 gap-2">
-    <button
-      v-for="tab in tabs"
-      :key="tab"
-      @click="handleChangeTab(tab)"
-      class="py-1.5 px-2 duration-200 text-black dark:text-white rounded-sm"
-      :class="{
-        'bg-primary dark:bg-secondary text-black dark:text-black':
-          selectedTab === tab,
-        'hover:bg-dark dark:hover:bg-light hover:bg-opacity-30':
-          selectedTab !== tab,
-      }"
-    >
-      {{ tab }}
-    </button>
-    <div class="grid place-items-center grid-flow-col absolute right-10">
+  <div class="flex justify-between w-full items-center my-6 gap-2">
+    <div class="w-full flex justify-start">
       <ProfileSelector
         :profile="profile!"
         @on-profile-create="fetchData()"
@@ -328,7 +310,40 @@ const balance = computed(() => {
         Edit profile
       </button>
     </div>
+    <div class="w-full flex justify-center gap-2">
+      <button
+        v-for="tab in tabs"
+        :key="tab"
+        @click="handleChangeTab(tab)"
+        class="py-1.5 px-2 duration-200 text-black dark:text-white rounded-sm"
+        :class="{
+          'bg-primary dark:bg-secondary bg-opacity-100 text-black dark:text-black':
+            selectedTab && selectedTab === tab,
+          'hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30':
+            selectedTab && selectedTab !== tab,
+        }"
+      >
+        {{ tab }}
+      </button>
+    </div>
+    <div class="w-full flex justify-end gap-2 text-sm">
+      <span>Items per page:</span>
+      <div v-for="n in [5, 10]">
+        <span
+          @click="handleSizeChange(n)"
+          class="cursor-pointer text-center w-fit p-0.5 duration-200"
+          :class="{
+            'opacity-30 pointer-events-none':
+              (n === earningsPagination.size && selectedTab === Tab.EARNING) ||
+              (n === expensesPagination.size && selectedTab === Tab.EXPENSE),
+          }"
+        >
+          {{ n }}
+        </span>
+      </div>
+    </div>
   </div>
+
   <div v-if="tableData && tableData.length > 0">
     <table class="min-w-full rounded-lg leading-normal">
       <thead>
@@ -430,13 +445,20 @@ const balance = computed(() => {
     No data available yet
   </div>
 
-  <div class="w-full mt-4 flex items-center justify-center">
-    <div class="flex-1">
-      <IconButton class="text-black dark:text-white" @click="openAddModal">
+  <div class="w-full mt-4 flex justify-between items-center">
+    <div class="w-1/3 flex justify-start items-center">
+      <button
+        class="py-1.5 px-2 duration-100 grid gap-2 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        @click="openAddModal"
+      >
         <AddIcon />
-      </IconButton>
+        <span class="text-black dark:text-white"
+          >Add new
+          {{ selectedTab === Tab.EARNING ? "earning" : "expense" }}</span
+        >
+      </button>
     </div>
-    <div class="flex-1 self-center">
+    <div class="w-1/3 flex justify-center">
       <PaginationTab
         :pagination="
           selectedTab === Tab.EARNING ? earningsPagination : expensesPagination
@@ -444,25 +466,15 @@ const balance = computed(() => {
         @on-page-change="changePage"
       />
     </div>
-    <div class="flex-1 grid grid-flow-col gap-2 text-sm min-w-fit">
-      <span
-        class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
-        >Total Earnings: {{ maskCurrency(totalEarnings) }}</span
-      >
-
-      <span class="p-2 rounded-md bg-red-600 bg-opacity-50 hover:bg-opacity-100"
-        >Total Expenses: {{ maskCurrency(totalExpenses) }}</span
-      >
-
-      <span
-        class="p-2 rounded-md"
-        :class="{
-          'bg-red-600': balance < 0,
-          'bg-green-600': balance > 0,
-          'bg-gray-600': balance == 0,
-        }"
-        >Balance: {{ maskCurrency(balance) }}</span
-      >
+    <div class="w-1/3 flex justify-end">
+      <BalanceTab
+        :earnings_subtotal="
+          earnings && earnings.length > 0 ? earnings[0].sub_total : 0
+        "
+        :expenses_subtotal="
+          expenses && expenses.length > 0 ? expenses[0].sub_total : 0
+        "
+      />
     </div>
   </div>
 

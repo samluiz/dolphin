@@ -327,4 +327,3 @@ export namespace types {
 	}
 
 }
-
