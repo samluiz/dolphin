@@ -9,6 +9,11 @@ import IconButton from "./components/ui/IconButton.vue";
 import AddIcon from "./components/ui/icons/AddIcon.vue";
 import { useProfileStore } from "./stores/ProfileStore";
 import ProfileSelector from "./components/ProfileSelector.vue";
+import LanguageSwitcher from "./components/LanguageSwitcher.vue";
+import { isUserPortugueseSpeaker } from "./shared/utils";
+import { useI18n } from "vue-i18n";
+
+const { locale } = useI18n();
 
 const profileStore = useProfileStore();
 
@@ -52,6 +57,12 @@ onMounted(() => {
     setThemeOnLocalStorage(newVal);
   });
 
+  if (isUserPortugueseSpeaker()) {
+    locale.value = "pt-BR";
+  } else {
+    locale.value = "en-US";
+  }
+
   fetchData();
 });
 
@@ -85,9 +96,7 @@ fetchAppVersion();
         class="w-full grid place-items-center p-8 text-center text-black dark:text-white"
         v-if="!profileStore.hasProfileCreated()"
       >
-        <span class="text-lg font-semibold"
-          >No profiles found. Create one right now!</span
-        >
+        <span class="text-lg font-semibold">{{ $t("no_profile") }}</span>
         <IconButton @click="openCreateProfileModal">
           <AddIcon />
         </IconButton>
@@ -121,6 +130,10 @@ fetchAppVersion();
         <span class="text-xs opacity-70 text-black dark:text-white">{{
           appVersion
         }}</span>
+      </div>
+
+      <div class="absolute bottom-0 right-0 p-4">
+        <LanguageSwitcher />
       </div>
     </div>
   </ThemeSwitcher>

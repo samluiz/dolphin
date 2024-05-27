@@ -49,12 +49,13 @@ function onSubmit(): void {
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <h1 class="text-2xl text-black dark:text-white">
-        Add {{ selectedTab === Tab.EARNING ? "earning" : "expense" }}
+        {{ $t("create") }}
+        {{ selectedTab === Tab.EARNING ? $t("earning") : $t("expense") }}
       </h1>
       <Input
         :required="true"
         :name="'description'"
-        :title="'Description'"
+        :title="$t('description')"
         :type="'text'"
         :model-value="formData.description"
         @update:model-value="(newValue) => (formData.description = newValue)"
@@ -62,7 +63,7 @@ function onSubmit(): void {
       <Input
         :required="true"
         :name="'amount'"
-        :title="'Amount'"
+        :title="$t('amount')"
         :type="'number'"
         :model-value="formData.amount"
         @update:model-value="(newValue) => (formData.amount = newValue)"
@@ -72,7 +73,7 @@ function onSubmit(): void {
         :required="true"
         v-if="selectedTab === Tab.EXPENSE"
         :name="'category'"
-        :title="'Category'"
+        :title="$t('category')"
         :model-value="(formData as types.ExpenseUpdate).category_id"
         @update:model-value="
           (newValue) =>
@@ -80,8 +81,10 @@ function onSubmit(): void {
         "
       />
       <div class="flex gap-4">
-        <CancelButton @click="emit('on-cancel')">Cancel</CancelButton>
-        <ConfirmButton>Add</ConfirmButton>
+        <CancelButton @click="emit('on-cancel')">{{
+          $t("cancel")
+        }}</CancelButton>
+        <ConfirmButton>{{ $t("save") }}</ConfirmButton>
       </div>
     </form>
   </Dialog>

@@ -37,11 +37,13 @@ function onSubmit(): void {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl text-black dark:text-white">Create profile</h1>
+      <h1 class="text-2xl text-black dark:text-white">
+        {{ $t("create") + " " + $t("profile") }}
+      </h1>
       <Input
         :required="true"
         :name="'description'"
-        :title="'Description'"
+        :title="$t('description')"
         :type="'text'"
         :model-value="description"
         @update:model-value="(newValue) => (description = newValue)"
@@ -50,7 +52,7 @@ function onSubmit(): void {
         v-if="profileStore.hasProfileCreated()"
         :required="false"
         :name="'default'"
-        :title="'Main profile'"
+        :title="$t('main_profile')"
         :type="'checkbox'"
         :checked="false"
         :model-value="isDefault"
@@ -62,8 +64,10 @@ function onSubmit(): void {
         "
       />
       <div class="flex gap-4">
-        <CancelButton @click="$emit('on-cancel')">Cancel</CancelButton>
-        <ConfirmButton>Add</ConfirmButton>
+        <CancelButton @click="$emit('on-cancel')">{{
+          $t("cancel")
+        }}</CancelButton>
+        <ConfirmButton>{{ $t("save") }}</ConfirmButton>
       </div>
     </form>
   </Dialog>

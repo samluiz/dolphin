@@ -15,9 +15,9 @@ defineProps<Props<types.Category>>();
 
 <template>
   <div class="flex flex-col justify-start items-center gap-2">
-    <label class="w-full text-sm text-black dark:text-white" :for="name"
-      >Category</label
-    >
+    <label class="w-full text-sm text-black dark:text-white" :for="name">{{
+      title
+    }}</label>
     <select
       :value="modelValue"
       :name="name"
@@ -29,10 +29,15 @@ defineProps<Props<types.Category>>();
       "
     >
       <option class="text-black dark:text-white" value="" disabled selected>
-        Select an option
+        {{ $t("select_an_option") }}
       </option>
-      <option v-for="option in options" :key="option.id" :value="option.id">
-        {{ option.description }}
+      <option
+        class="hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        v-for="option in options"
+        :key="option.id"
+        :value="option.id"
+      >
+        {{ $t(option.description.toLowerCase()) }}
       </option>
     </select>
   </div>

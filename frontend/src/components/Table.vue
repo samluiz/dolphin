@@ -31,6 +31,9 @@ import { useProfileStore } from "@/stores/ProfileStore";
 import { storeToRefs } from "pinia";
 import EditProfileModal from "./EditProfileModal.vue";
 import { Tab } from "@/shared/types";
+import { useI18n } from "vue-i18n";
+
+const { t, d, n } = useI18n();
 
 const profileStore = useProfileStore();
 
@@ -307,7 +310,7 @@ const handleSizeChange = (n: number) => {
         @click="openUpdateProfileModal"
         class="py-1.5 px-2 duration-100 grid w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
       >
-        Edit profile
+        {{ t("edit_profile") }}
       </button>
     </div>
     <div class="w-full flex justify-center gap-2">
@@ -323,13 +326,13 @@ const handleSizeChange = (n: number) => {
             selectedTab && selectedTab !== tab,
         }"
       >
-        {{ tab }}
+        {{ tab === Tab.EARNING ? t("earning", 2) : t("expense", 2) }}
       </button>
     </div>
     <div
       class="w-full flex justify-end gap-2 text-sm text-black dark:text-white"
     >
-      <span>Items per page:</span>
+      <span>{{ t("per_page") }}</span>
       <div v-for="n in [5, 10]">
         <span
           @click="handleSizeChange(n)"
@@ -351,7 +354,7 @@ const handleSizeChange = (n: number) => {
       <thead>
         <tr class="text-center">
           <TableHeader
-            >Description
+            >{{ t("description") }}
             <SortArrowIcon
               @click="sortTableData('description')"
               :class="{
@@ -365,7 +368,7 @@ const handleSizeChange = (n: number) => {
               }"
           /></TableHeader>
           <TableHeader
-            >Amount
+            >{{ t("amount") }}
             <SortArrowIcon
               @click="sortTableData('amount')"
               :class="{
@@ -377,7 +380,7 @@ const handleSizeChange = (n: number) => {
               }"
           /></TableHeader>
           <TableHeader v-if="selectedTab === Tab.EXPENSE"
-            >Category
+            >{{ t("category") }}
             <SortArrowIcon
               @click="sortTableData('category')"
               :class="{
@@ -387,7 +390,7 @@ const handleSizeChange = (n: number) => {
               }"
           /></TableHeader>
           <TableHeader
-            >Created
+            >{{ t("created") }}
             <SortArrowIcon
               @click="sortTableData('created_at')"
               :class="{
@@ -399,7 +402,7 @@ const handleSizeChange = (n: number) => {
               }"
           /></TableHeader>
           <TableHeader
-            >Updated
+            >{{ t("updated") }}
             <SortArrowIcon
               @click="sortTableData('updated_at')"
               :class="{
@@ -420,12 +423,12 @@ const handleSizeChange = (n: number) => {
           :key="item.id"
         >
           <TableData>{{ item.description }}</TableData>
-          <TableData>{{ maskCurrency(item.amount) }}</TableData>
+          <TableData>{{ n(item.amount, "currency") }}</TableData>
           <TableData v-if="selectedTab === Tab.EXPENSE">{{
-            (item as types.ExpenseOutput).category
+            t((item as types.ExpenseOutput).category.toLowerCase())
           }}</TableData>
-          <TableData>{{ maskDate(item.created_at) }}</TableData>
-          <TableData>{{ maskDate(item.updated_at) }}</TableData>
+          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
+          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
           <TableData class="flex flex-row justify-end">
             <div class="flex flex-row justify-evenly w-20">
               <IconButton class="text-black" @click="openEditModal(item.id)">
@@ -444,7 +447,7 @@ const handleSizeChange = (n: number) => {
     </table>
   </div>
   <div v-else class="text-center text-black dark:text-white py-4">
-    No data available yet
+    {{ t("no_data") }}
   </div>
 
   <div class="w-full mt-4 flex justify-between items-center">
@@ -454,10 +457,9 @@ const handleSizeChange = (n: number) => {
         @click="openAddModal"
       >
         <AddIcon />
-        <span class="text-black dark:text-white"
-          >Add new
-          {{ selectedTab === Tab.EARNING ? "earning" : "expense" }}</span
-        >
+        <span class="text-black dark:text-white">{{
+          selectedTab === Tab.EARNING ? t("new_earning") : t("new_expense")
+        }}</span>
       </button>
     </div>
     <div class="w-1/3 flex justify-center">
@@ -485,7 +487,11 @@ const handleSizeChange = (n: number) => {
     :is-open="isDeleteTableDataModalOpen"
     @on-confirm="deleteTableData"
     @on-cancel="closeDeleteTableDataModal"
-    :title="selectedTab === Tab.EARNING ? 'Delete earning' : 'Delete expense'"
+    :title="
+      selectedTab === Tab.EARNING
+        ? t('delete') + ' ' + t('earning')
+        : t('delete') + ' ' + t('expense')
+    "
   />
   <EditItemModal
     v-if="isEditModalOpen && selectedTab"

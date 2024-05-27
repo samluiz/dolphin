@@ -2,6 +2,9 @@
 import { computed, ref, toRefs } from "vue";
 import { maskCurrency } from "@/shared/utils";
 import SelectArrowIcon from "./ui/icons/SelectArrowIcon.vue";
+import { useI18n } from "vue-i18n";
+
+const i18n = useI18n();
 
 const props = defineProps<{
   earnings_subtotal: number;
@@ -35,7 +38,7 @@ const toggleDropdown = () => {
         'bg-gray-600 hover:bg-gray-700': balance == 0,
       }"
     >
-      <span>Balance: {{ maskCurrency(balance) }}</span>
+      <span>{{ $t("balance") + ": " + maskCurrency(balance) }}</span>
       <SelectArrowIcon />
     </div>
     <transition name="fade">
@@ -45,12 +48,25 @@ const toggleDropdown = () => {
       >
         <span
           class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
-          >Total Earnings: {{ maskCurrency(earnings_subtotal) }}</span
+        >
+          {{
+            $t("total") +
+            " " +
+            i18n.t("earning", 2) +
+            ": " +
+            maskCurrency(earnings_subtotal)
+          }}</span
         >
 
         <span
           class="p-2 rounded-md bg-red-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
-          >Total Expenses: {{ maskCurrency(expenses_subtotal) }}</span
+          >{{
+            $t("total") +
+            " " +
+            i18n.t("expense", 2) +
+            ": " +
+            maskCurrency(expenses_subtotal)
+          }}</span
         >
       </div>
     </transition>

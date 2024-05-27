@@ -72,11 +72,13 @@ onMounted(() => {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl text-black dark:text-white">Edit profile</h1>
+      <h1 class="text-2xl text-black dark:text-white">
+        {{ $t("edit_profile") }}
+      </h1>
       <Input
         :required="true"
         :name="'description'"
-        :title="'Description'"
+        :title="$t('description')"
         :type="'text'"
         :model-value="formData.description"
         @update:model-value="(newValue) => (formData.description = newValue)"
@@ -85,7 +87,7 @@ onMounted(() => {
         v-if="!isOnlyProfile"
         :required="false"
         :name="'default'"
-        :title="'Main profile'"
+        :title="$t('main_profile')"
         :type="'checkbox'"
         :checked="formData.is_default"
         :model-value="formData.is_default"
@@ -97,12 +99,14 @@ onMounted(() => {
         "
       />
       <div class="flex gap-4">
-        <ConfirmButton>Edit</ConfirmButton>
-        <CancelButton @click="$emit('on-cancel')">Cancel</CancelButton>
+        <ConfirmButton>{{ $t("save") }}</ConfirmButton>
+        <CancelButton @click="$emit('on-cancel')">{{
+          $t("cancel")
+        }}</CancelButton>
         <DangerButton
           v-if="!isOnlyProfile && !profile?.is_default"
           @click="openDeleteProfileModal"
-          >Delete</DangerButton
+          >{{ $t("delete") }}</DangerButton
         >
       </div>
     </form>
@@ -113,6 +117,6 @@ onMounted(() => {
     :is-open="isDeleteProfileModalOpen"
     @on-confirm="deleteProfile"
     @on-cancel="closeDeleteProfileModal"
-    :title="'Delete profile'"
+    :title="$t('delete') + ' ' + $t('profile')"
   />
 </template>

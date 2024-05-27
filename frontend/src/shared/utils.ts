@@ -8,3 +8,11 @@ export function maskCurrency(value: number): string {
 export function maskDate(date: string): string {
   return new Date(date).toLocaleDateString("en-US");
 }
+
+export function getUserLocale(): string {
+  return navigator.language;
+}
+
+export function isUserPortugueseSpeaker(): boolean {
+  return getUserLocale().startsWith("pt");
+}

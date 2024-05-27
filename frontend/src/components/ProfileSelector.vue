@@ -66,7 +66,8 @@ const otherProfiles = computed(() => {
     <button
       class="py-1.5 px-2 duration-100 grid min-w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
     >
-      {{ profile ? profile.description : "Select profile" }} <SelectArrowIcon />
+      {{ profile ? profile.description : $t("select_profile") }}
+      <SelectArrowIcon />
     </button>
     <transition name="fade">
       <ul

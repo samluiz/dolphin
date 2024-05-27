@@ -15,17 +15,20 @@ const { isOpen, title } = toRefs(props);
 <template>
   <div class="fixed z-50">
     <Dialog :isOpen="isOpen">
-      <h1 class="text-2xl text-black dark:text-white">
-        {{ title ? title : "Delete" }}
+      <h1 class="text-2xl mb-2 text-black dark:text-white">
+        {{ title ? title : $t("delete") }}
       </h1>
       <div class="flex flex-col gap-4">
         <h1 class="text-lg text-black dark:text-white">
-          Are you sure you want to delete this item? This action cannot be
-          undone.
+          {{ $t("warning") }}
         </h1>
         <div class="flex gap-4">
-          <CancelButton @click="$emit('on-cancel')">Cancel</CancelButton>
-          <DangerButton @click="$emit('on-confirm')">Delete</DangerButton>
+          <CancelButton @click="$emit('on-cancel')">{{
+            $t("cancel")
+          }}</CancelButton>
+          <DangerButton @click="$emit('on-confirm')">{{
+            $t("delete")
+          }}</DangerButton>
         </div>
       </div>
     </Dialog>
