@@ -26,7 +26,7 @@ const closeDropdown = () => {
 
 <template>
   <div
-    class="flex flex-col justify-self-end gap-2 text-sm min-w-44"
+    class="flex flex-col justify-self-end gap-2 text-sm min-w-44 relative"
     @mouseover="openDropdown"
     @mouseleave="closeDropdown"
   >
@@ -39,16 +39,12 @@ const closeDropdown = () => {
       }"
     >
       <span>Balance: {{ maskCurrency(balance) }}</span>
-      <span
-        class="ml-2 opacity-50 duration-200"
-        :class="{
-          'opacity-100': isDropdownOpen,
-        }"
-        >&#128712;</span
-      >
     </div>
     <transition name="fade">
-      <div class="grid grid-flow-row gap-2 min-w-44" v-if="isDropdownOpen">
+      <div
+        class="grid grid-flow-row gap-2 min-w-44 mt-11 absolute z-50"
+        v-show="isDropdownOpen"
+      >
         <span
           class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
           >Total Earnings: {{ maskCurrency(earnings_subtotal) }}</span
