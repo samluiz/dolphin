@@ -1,19 +1,30 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import BrazilianFlag from "./ui/icons/BrazilianFlag.vue";
+import AmericanFlag from "./ui/icons/AmericanFlag.vue";
+
+const locales = [
+  { code: "pt-BR", label: "Português", flag: BrazilianFlag },
+  { code: "en-US", label: "English", flag: AmericanFlag },
+];
+</script>
 
 <template>
   <div>
-    <select
-      class="p-2 text-center text-sm bg-transparent text-black dark:text-white border-0 appearance-none outline-none focus:ring-1 placeholder:text-center"
-      v-model="$i18n.locale"
+    <ul
+      class="px-2 text-center grid place-items-center grid-flow-col gap-2 bg-transparent text-black dark:text-white"
     >
-      <option
-        class="text-black"
-        v-for="locale in $i18n.availableLocales"
-        :key="`locale-${locale}`"
-        :value="locale"
+      <li
+        class="grid place-items-center grid-flow-row cursor-pointer"
+        v-for="locale in locales"
+        :key="`locale-${locale.code}`"
+        :value="locale.code"
+        @click="$i18n.locale = locale.code"
       >
-        {{ locale !== "pt-BR" ? "English" : "Português" }}
-      </option>
-    </select>
+        <component
+          class="text-2xl duration-200 hover:scale-110"
+          :is="locale.flag"
+        />
+      </li>
+    </ul>
   </div>
 </template>

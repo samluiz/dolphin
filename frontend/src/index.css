@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer utilities {
+  :root {
+    color-scheme: light dark;
+  }
+
   @font-face {
     font-family: sunflower;
     src: url(./assets/fonts/Sunflower-Light.ttf) format("truetype");
@@ -24,8 +28,9 @@
   html,
   body {
     height: 100vh;
-    color: white;
+    color: light-dark(#000, #fff);
     font-family: "sunflower", sans-serif;
+    background-color: light-dark(#eaeaea, #1c1c1c);
     font-weight: 300;
     -webkit-font-smoothing: antialiased !important;
   }

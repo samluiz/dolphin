@@ -350,7 +350,7 @@ const handleSizeChange = (n: number) => {
   </div>
 
   <div v-if="tableData && tableData.length > 0">
-    <table class="min-w-full rounded-lg leading-normal">
+    <table class="min-w-full rounded-lg leading-normal table-fixed">
       <thead>
         <tr class="text-center">
           <TableHeader
