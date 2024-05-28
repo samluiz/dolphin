@@ -72,14 +72,16 @@ func createCurrentVersionDir(homeDir string, version string) error {
 		}
 	}
 
-	if previousVersionPath != "" {
-		err = copyPreviousDatabase(homeDir, version, previousVersionPath)
+	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin", version, "database.db")); os.IsNotExist(err) {
+		if previousVersionPath != "" {
+			err = copyPreviousDatabase(homeDir, version, previousVersionPath)
 
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
+
+			return nil
 		}
-
-		return nil
 	}
 
 	return nil
