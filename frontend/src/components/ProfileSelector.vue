@@ -64,7 +64,7 @@ const otherProfiles = computed(() => {
 <template>
   <div @mouseover="openDropdown" @mouseleave="closeDropdown">
     <button
-      class="py-1.5 px-2 duration-100 grid min-w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+      class="py-1.5 px-2 duration-100 grid min-w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-light-text hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
     >
       {{ profile ? profile.description : $t("select_profile") }}
       <SelectArrowIcon />
@@ -72,22 +72,22 @@ const otherProfiles = computed(() => {
     <transition name="fade">
       <ul
         v-if="isDropdownOpen"
-        class="shadow-lg flex flex-col rounded-sm ring-1 ring-black ring-opacity-5 focus:outline-none absolute min-w-24 bg-light dark:bg-dark text-black dark:text-white z-50"
+        class="shadow-lg flex flex-col rounded-sm ring-1 ring-black ring-opacity-5 focus:outline-none absolute min-w-24 bg-light dark:bg-dark text-black dark:text-light-text z-50"
       >
         <li
           v-for="profile in otherProfiles"
           :key="profile.id"
           @click="selectProfile(profile)"
-          class="cursor-pointer p-2 text-black min-w-24 dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+          class="cursor-pointer p-2 text-black min-w-24 dark:text-light-text hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
         >
           {{ profile.description }}
         </li>
         <li
           @click="openCreateProfileModal"
-          class="cursor-pointer flex flex-col min-w-24 p-2 text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+          class="cursor-pointer flex flex-col min-w-24 p-2 text-black dark:text-light-text hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
         >
           <AddIcon
-            class="text-black dark:text-white justify-self-center self-center"
+            class="text-black dark:text-light-text justify-self-center self-center"
             @click="openCreateProfileModal"
           />
         </li>

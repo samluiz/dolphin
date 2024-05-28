@@ -26,7 +26,7 @@ const toggleDropdown = () => {
 
 <template>
   <div
-    class="flex flex-col justify-self-end gap-2 text-sm min-w-44 relative"
+    class="flex flex-col justify-self-end gap-2 min-w-44 relative text-light-text text-sm"
     @click="toggleDropdown"
     v-click-outside="() => (isDropdownOpen = false)"
   >

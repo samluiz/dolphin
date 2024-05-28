@@ -11,7 +11,7 @@ const locales = [
 <template>
   <div>
     <ul
-      class="px-2 text-center grid place-items-center grid-flow-col gap-2 bg-transparent text-black dark:text-white"
+      class="px-2 text-center grid place-items-center grid-flow-col gap-2 bg-transparent text-black dark:text-light-text"
     >
       <li
         class="grid place-items-center grid-flow-row cursor-pointer"

@@ -308,7 +308,7 @@ const handleSizeChange = (n: number) => {
       />
       <button
         @click="openUpdateProfileModal"
-        class="py-1.5 px-2 duration-100 grid w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        class="py-1.5 px-2 duration-100 grid w-24 place-items-center grid-flow-col rounded-sm text-black dark:text-light-text hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
       >
         {{ t("edit_profile") }}
       </button>
@@ -318,7 +318,7 @@ const handleSizeChange = (n: number) => {
         v-for="tab in tabs"
         :key="tab"
         @click="handleChangeTab(tab)"
-        class="py-1.5 px-2 duration-200 text-black dark:text-white rounded-sm"
+        class="py-1.5 px-2 duration-200 text-black dark:text-light-text rounded-sm"
         :class="{
           'bg-primary dark:bg-secondary bg-opacity-100 text-black dark:text-black':
             selectedTab && selectedTab === tab,
@@ -330,7 +330,7 @@ const handleSizeChange = (n: number) => {
       </button>
     </div>
     <div
-      class="w-full flex justify-end gap-2 text-sm text-black dark:text-white"
+      class="w-full flex justify-end gap-2 text-sm text-black dark:text-light-text"
     >
       <span>{{ t("per_page") }}</span>
       <div v-for="n in [5, 10]">
@@ -379,16 +379,6 @@ const handleSizeChange = (n: number) => {
                     expensesPagination.sort_by.toLowerCase() === 'asc'),
               }"
           /></TableHeader>
-          <TableHeader v-if="selectedTab === Tab.EXPENSE"
-            >{{ t("category") }}
-            <SortArrowIcon
-              @click="sortTableData('category')"
-              :class="{
-                'rotate-180':
-                  expensesPagination.order_by.toLowerCase() === 'category' &&
-                  expensesPagination.sort_by.toLowerCase() === 'asc',
-              }"
-          /></TableHeader>
           <TableHeader
             >{{ t("created") }}
             <SortArrowIcon
@@ -413,29 +403,44 @@ const handleSizeChange = (n: number) => {
                     expensesPagination.sort_by.toLowerCase() === 'asc'),
               }"
           /></TableHeader>
+          <TableHeader v-if="selectedTab === Tab.EXPENSE"
+            >{{ t("category") }}
+            <SortArrowIcon
+              @click="sortTableData('category')"
+              :class="{
+                'rotate-180':
+                  expensesPagination.order_by.toLowerCase() === 'category' &&
+                  expensesPagination.sort_by.toLowerCase() === 'asc',
+              }"
+          /></TableHeader>
+          <TableHeader v-else></TableHeader>
           <TableHeader></TableHeader>
         </tr>
       </thead>
       <tbody>
         <tr
-          class="text-center odd:bg-primary even:bg-secondary text-black"
+          class="text-center odd:bg-[#F2F2F2] even:bg-[#e0e0e0] dark:odd:bg-[#404040] dark:even:bg-[#252525] text-black dark:text-light-text"
           v-for="item in tableData"
           :key="item.id"
         >
           <TableData>{{ item.description }}</TableData>
           <TableData>{{ n(item.amount, "currency") }}</TableData>
+          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
+          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
           <TableData v-if="selectedTab === Tab.EXPENSE">{{
             t((item as types.ExpenseOutput).category.toLowerCase())
           }}</TableData>
-          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
-          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
+          <TableData v-else></TableData>
           <TableData class="flex flex-row justify-end">
             <div class="flex flex-row justify-evenly w-20">
-              <IconButton class="text-black" @click="openEditModal(item.id)">
+              <IconButton
+                class="text-black dark:text-light-text"
+                @click="openEditModal(item.id)"
+              >
                 <EditIcon />
               </IconButton>
               <IconButton
-                class="text-black"
+                class="text-black dark:text-light-text"
                 @click="openDeleteTableDataModal(item.id)"
               >
                 <DeleteIcon />
@@ -446,18 +451,18 @@ const handleSizeChange = (n: number) => {
       </tbody>
     </table>
   </div>
-  <div v-else class="text-center text-black dark:text-white py-4">
+  <div v-else class="text-center text-black dark:text-light-text py-4">
     {{ t("no_data") }}
   </div>
 
   <div class="w-full mt-4 flex justify-between items-center">
     <div class="w-1/3 flex justify-start items-center">
       <button
-        class="py-1.5 px-2 duration-100 grid gap-2 place-items-center grid-flow-col rounded-sm text-black dark:text-white hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
+        class="py-1.5 px-2 duration-100 grid gap-2 place-items-center grid-flow-col rounded-sm text-black dark:text-light-text hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30"
         @click="openAddModal"
       >
         <AddIcon />
-        <span class="text-black dark:text-white">{{
+        <span class="text-black dark:text-light-text">{{
           selectedTab === Tab.EARNING ? t("new_earning") : t("new_expense")
         }}</span>
       </button>

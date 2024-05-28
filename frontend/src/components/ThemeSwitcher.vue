@@ -21,7 +21,7 @@ const { isDarkMode } = toRefs(props);
   >
     <button
       @click="$emit('toggle-theme')"
-      class="p-2 text-black dark:text-white rounded-lg"
+      class="p-2 text-black dark:text-light-text rounded-lg"
     >
       <transition name="icon-fade" mode="out-in">
         <span v-if="isDarkMode" key="dark"><LightModeIcon /></span>

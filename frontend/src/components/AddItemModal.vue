@@ -48,7 +48,7 @@ function onSubmit(): void {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl text-black dark:text-white">
+      <h1 class="text-2xl text-black dark:text-light-text">
         {{ $t("create") }}
         {{ selectedTab === Tab.EARNING ? $t("earning") : $t("expense") }}
       </h1>

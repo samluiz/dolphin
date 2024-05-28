@@ -15,11 +15,11 @@ const { isOpen, title } = toRefs(props);
 <template>
   <div class="fixed z-50">
     <Dialog :isOpen="isOpen">
-      <h1 class="text-2xl mb-2 text-black dark:text-white">
+      <h1 class="text-2xl mb-2 text-black dark:text-light-text">
         {{ title ? title : $t("delete") }}
       </h1>
       <div class="flex flex-col gap-4">
-        <h1 class="text-lg text-black dark:text-white">
+        <h1 class="text-lg text-black dark:text-light-text">
           {{ $t("warning") }}
         </h1>
         <div class="flex gap-4">

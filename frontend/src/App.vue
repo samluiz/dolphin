@@ -53,7 +53,7 @@ const setThemeOnLocalStorage = (darkMode: boolean) => {
 const getLocaleFromLocalStorage = () => {
   const localeLs = localStorage.getItem("locale");
   if (localeLs) {
-    locale.value = JSON.parse(localeLs);
+    locale.value = localeLs;
   } else {
     locale.value = isUserPortugueseSpeaker() ? "pt-BR" : "en-US";
   }
@@ -102,11 +102,11 @@ fetchAppVersion();
       <div class="w-full grid place-items-start p-8">
         <div class="flex items-center gap-4">
           <DolphinIcon />
-          <h1 class="text-black dark:text-white text-5xl">Dolphin</h1>
+          <h1 class="text-black dark:text-light-text text-5xl">Dolphin</h1>
         </div>
       </div>
       <div
-        class="w-full grid place-items-center p-8 text-center text-black dark:text-white"
+        class="w-full grid place-items-center p-8 text-center text-black dark:text-light-text"
         v-if="!profileStore.hasProfileCreated()"
       >
         <span class="text-lg font-semibold">{{ $t("no_profile") }}</span>
@@ -116,7 +116,7 @@ fetchAppVersion();
       </div>
 
       <div
-        class="grid place-items-center p-8 text-center text-black dark:text-white"
+        class="grid place-items-center p-8 text-center text-black dark:text-light-text"
         v-else-if="profileStore.hasProfileCreated() && !profileStore.profile"
       >
         <ProfileSelector
@@ -140,7 +140,7 @@ fetchAppVersion();
       />
 
       <div class="absolute bottom-0 left-0 p-4">
-        <span class="text-xs opacity-70 text-black dark:text-white">{{
+        <span class="text-xs opacity-70 text-black dark:text-light-text">{{
           appVersion
         }}</span>
       </div>

@@ -15,20 +15,25 @@ defineProps<Props<types.Category>>();
 
 <template>
   <div class="flex flex-col justify-start items-center gap-2">
-    <label class="w-full text-sm text-black dark:text-white" :for="name">{{
+    <label class="w-full text-sm text-black dark:text-light-text" :for="name">{{
       title
     }}</label>
     <select
       :value="modelValue"
       :name="name"
       :required="required"
-      class="w-full p-1 rounded-sm shadow-lg text-white bg-secondary dark:text-black dark:bg-primary border-0 appearance-none outline-none focus:ring-1 placeholder:text-center"
+      class="w-full p-1 rounded-sm shadow-lg text-light-text bg-secondary dark:text-black dark:bg-primary border-0 appearance-none outline-none focus:ring-1 placeholder:text-center"
       placeholder="Select a category"
       @change="
         $emit('update:modelValue', ($event.target as HTMLInputElement)?.value)
       "
     >
-      <option class="text-black dark:text-white" value="" disabled selected>
+      <option
+        class="text-black dark:text-light-text"
+        value=""
+        disabled
+        selected
+      >
         {{ $t("select_an_option") }}
       </option>
       <option

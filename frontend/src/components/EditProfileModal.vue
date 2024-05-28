@@ -72,7 +72,7 @@ onMounted(() => {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl text-black dark:text-white">
+      <h1 class="text-2xl text-black dark:text-light-text">
         {{ $t("edit_profile") }}
       </h1>
       <Input
@@ -84,7 +84,7 @@ onMounted(() => {
         @update:model-value="(newValue) => (formData.description = newValue)"
       />
       <Checkbox
-        v-if="!isOnlyProfile"
+        :disabled="profile?.is_default! && !isOnlyProfile"
         :required="false"
         :name="'default'"
         :title="$t('main_profile')"

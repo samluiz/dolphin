@@ -43,7 +43,7 @@ const visiblePages = computed(() => {
   <div class="flex justify-center gap-2 text-sm">
     <button
       @click="handlePageChange(pagination!.page - 1)"
-      class="px-2 text-black dark:text-white duration-200"
+      class="px-2 text-black dark:text-light-text duration-200"
       :disabled="pagination && pagination.prev_page === 0"
       :class="{
         'opacity-30': pagination && pagination.prev_page === 0,
@@ -55,7 +55,7 @@ const visiblePages = computed(() => {
       v-for="page in visiblePages"
       :key="page"
       @click="handlePageChange(page)"
-      class="px-2 text-black dark:text-white rounded-lg duration-200"
+      class="px-2 text-black dark:text-light-text rounded-lg duration-200"
       :class="{
         'opacity-30 pointer-events-none':
           pagination && pagination.page === page,
@@ -65,7 +65,7 @@ const visiblePages = computed(() => {
     </button>
     <button
       @click="handlePageChange(pagination!.page + 1)"
-      class="px-2 text-black dark:text-white rounded-lg duration-200"
+      class="px-2 text-black dark:text-light-text rounded-lg duration-200"
       :disabled="pagination && pagination.next_page === 0"
       :class="{
         'opacity-30': pagination && pagination.next_page === 0,
