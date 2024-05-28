@@ -37,7 +37,7 @@ function onSubmit(): void {
 <template>
   <Dialog :isOpen="isOpen">
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <h1 class="text-2xl text-black dark:text-light-text">
+      <h1 class="text-2xl text-black dark:text-white">
         {{ $t("create") + " " + $t("profile") }}
       </h1>
       <Input
@@ -49,6 +49,7 @@ function onSubmit(): void {
         @update:model-value="(newValue) => (description = newValue)"
       />
       <Checkbox
+        :disabled="false"
         v-if="profileStore.hasProfileCreated()"
         :required="false"
         :name="'default'"
