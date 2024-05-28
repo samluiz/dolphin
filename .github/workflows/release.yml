@@ -5,11 +5,17 @@ on:
     tags:
       - "*"
 
+env:
+  MACOS_ZIP: Dolphin_MacOS_${{ github.ref_name }}.zip
+  WINDOWS_ZIP: Dolphin_Windows_Setup_${{ github.ref_name }}.zip
+  LINUX_ZIP: Dolphin_Linux_${{ github.ref_name }}.zip
+
 jobs:
   build-macos:
     environment: 
         name: release
     runs-on: macos-latest
+    
 
     steps:
     - name: Checkout code
@@ -26,17 +32,17 @@ jobs:
 
     - name: Build for macOS
       run: |
-        wails build -platform darwin/universal -ldflags "-X main.Version=$GITHUB_REF_NAME"
+        wails build -platform darwin/universal -ldflags "-X main.Version=${{ github.ref_name }}"
 
     - name: Zip macOS binary
       run: |
-        zip -r Dolphin_MacOS_$GITHUB_REF_NAME.zip ./build/bin/Dolphin.app
+        zip -r ${{ env.MACOS_ZIP }} ./build/bin/Dolphin.app
 
     - name: Upload macOS zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_MacOS
-        path: Dolphin_MacOS_$GITHUB_REF_NAME.zip
+        path: ${{ env.MACOS_ZIP }}
 
   build-windows-and-linux:
     environment: 
@@ -69,7 +75,7 @@ jobs:
 
     - name: Zip Windows amd64 installer
       run: |
-        zip -r Dolphin_Windows_Setup_$GITHUB_REF_NAME.zip ./Dolphin_Windows_Amd64-Setup.exe
+        zip -r ${{ env.WINDOWS_ZIP }} ./Dolphin_Windows_Amd64-Setup.exe
 
     - name: Build for Linux/amd64
       run: |
@@ -79,19 +85,19 @@ jobs:
 
     - name: Zip Linux amd64 binary
       run: |
-        zip -r Dolphin_Linux_$GITHUB_REF_NAME.zip ./Dolphin_Linux_Amd64
+        zip -r ${{ env.LINUX_ZIP }} ./Dolphin_Linux_Amd64
 
     - name: Upload Windows/amd64 zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Windows_Setup
-        path: Dolphin_Windows_Setup_$GITHUB_REF_NAME.zip
+        path: ${{ env.WINDOWS_ZIP }}
 
     - name: Upload Linux/amd64 zip
       uses: actions/upload-artifact@v4
       with:
         name: Dolphin_Linux
-        path: Dolphin_Linux_$GITHUB_REF_NAME.zip
+        path: ${{ env.LINUX_ZIP }}
 
   create-release:
     environment: 
@@ -131,8 +137,8 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          ./artifacts/Dolphin_MacOS_$GITHUB_REF_NAME.zip
-          ./artifacts/Dolphin_Windows_Setup_$GITHUB_REF_NAME.zip
-          ./artifacts/Dolphin_Linux_$GITHUB_REF_NAME.zip
+          ./artifacts/${{ env.MACOS_ZIP }}
+          ./artifacts/${{ env.WINDOWS_ZIP }}
+          ./artifacts/${{ env.LINUX_ZIP }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
