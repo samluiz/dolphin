@@ -50,6 +50,19 @@ const setThemeOnLocalStorage = (darkMode: boolean) => {
   localStorage.setItem("isDarkMode", JSON.stringify(darkMode));
 };
 
+const getLocaleFromLocalStorage = () => {
+  const localeLs = localStorage.getItem("locale");
+  if (localeLs) {
+    locale.value = JSON.parse(localeLs);
+  } else {
+    locale.value = isUserPortugueseSpeaker() ? "pt-BR" : "en-US";
+  }
+};
+
+const setLocaleOnLocalStorage = (locale: string) => {
+  localStorage.setItem("locale", locale);
+};
+
 onMounted(() => {
   getThemeFromLocalStorage();
 
@@ -57,11 +70,11 @@ onMounted(() => {
     setThemeOnLocalStorage(newVal);
   });
 
-  if (isUserPortugueseSpeaker()) {
-    locale.value = "pt-BR";
-  } else {
-    locale.value = "en-US";
-  }
+  getLocaleFromLocalStorage();
+
+  watch(locale, (newVal) => {
+    setLocaleOnLocalStorage(newVal);
+  });
 
   fetchData();
 });
