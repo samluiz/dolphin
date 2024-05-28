@@ -1,6 +1,7 @@
 package db
 
 import (
+	"dolphin/backend/shared/utils"
 	"os"
 	"path/filepath"
 
@@ -57,12 +58,28 @@ func createAppDir(homeDir string) error {
 }
 
 func createCurrentVersionDir(homeDir string, version string) error {
+	previousVersionPath, err := getPreviousVersionPath()
+
+	if err != nil {
+		return err
+	}
+
 	if _, err := os.Stat(filepath.Join(homeDir, ".dolphin", version)); os.IsNotExist(err) {
 		err = os.Mkdir(filepath.Join(homeDir, ".dolphin", version), 0755)
 
 		if err != nil {
 			return err
 		}
+	}
+
+	if previousVersionPath != "" {
+		err = copyPreviousDatabase(homeDir, version, previousVersionPath)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
 	}
 
 	return nil
@@ -83,8 +100,6 @@ func getDbPath() (string, error) {
 
 	if Version == "" {
 		Version = "Build"
-	} else {
-		renamePreviousVersionPath()
 	}
 
 	err = createCurrentVersionDir(homeDir, Version)
@@ -128,20 +143,8 @@ func getPreviousVersionPath() (string, error) {
 	return filepath.Join(homeDir, ".dolphin", versions[len(versions)-1], "database.db"), nil
 }
 
-func renamePreviousVersionPath() error {
-	previousVersionPath, err := getPreviousVersionPath()
-
-	if err != nil {
-		return err
-	}
-
-	if previousVersionPath == "" {
-		return nil
-	}
-
-	newPath := previousVersionPath + ".old"
-
-	err = os.Rename(previousVersionPath, newPath)
+func copyPreviousDatabase(homeDir string, version string, previousVersionPath string) error {
+	_, err := utils.CopyFile(previousVersionPath, filepath.Join(homeDir, ".dolphin", version, "database.db"))
 
 	if err != nil {
 		return err
