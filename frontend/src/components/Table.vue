@@ -249,8 +249,6 @@ const fetchData = async () => {
   isLoading.value = true;
   await fetchEarnings();
   await fetchExpenses();
-  console.log(earningsPagination.value);
-  console.log(expensesPagination.value);
   isLoading.value = false;
 };
 

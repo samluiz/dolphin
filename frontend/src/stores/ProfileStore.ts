@@ -16,13 +16,11 @@ export const useProfileStore = defineStore(
     const profiles: Ref<types.Profile[]> = ref([]);
 
     const fetchProfiles = async () => {
-      console.log("Fetching profiles");
       const response = await findAllProfiles();
       profiles.value = response;
 
       if (profiles.value && profiles.value.length > 0) {
         if (profile.value) {
-          console.log("Profile already created");
           return;
         }
         profiles.value.map((p) => {
@@ -42,7 +40,6 @@ export const useProfileStore = defineStore(
       profiles && profiles.value && profiles.value.length > 0;
 
     const setActiveProfile = (newProfile: types.Profile | null) => {
-      console.log("Active profile set to", newProfile);
       profile.value = newProfile;
     };
 

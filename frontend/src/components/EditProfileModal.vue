@@ -34,8 +34,6 @@ const formData: Ref<types.ProfileInput> = ref({
 });
 
 function onSubmit(): void {
-  console.log(formData?.value);
-
   profileStore
     .update(profile?.value?.id!, {
       description: formData?.value?.description!,
@@ -63,7 +61,6 @@ const closeDeleteProfileModal = () => {
 
 onMounted(() => {
   if (profileStore.isOnlyProfile()) {
-    console.log("isOnlyProfile", profileStore.isOnlyProfile());
     isOnlyProfile.value = true;
   }
 });
@@ -93,7 +90,6 @@ onMounted(() => {
         :model-value="formData.is_default"
         @change="
           (e) => {
-            console.log(e.target.checked);
             formData.is_default = e.target.checked;
           }
         "

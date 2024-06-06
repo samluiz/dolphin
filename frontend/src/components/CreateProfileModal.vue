@@ -59,7 +59,6 @@ function onSubmit(): void {
         :model-value="isDefault"
         @change="
           (e) => {
-            console.log(e.target.checked);
             isDefault = e.target.checked;
           }
         "
