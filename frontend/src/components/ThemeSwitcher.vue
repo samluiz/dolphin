@@ -14,7 +14,7 @@ const { isDarkMode } = toRefs(props);
 
 <template>
   <div
-    class="fixed duration-200 top-8 right-8"
+    class="absolute duration-200 top-8 right-8 z-50"
     :class="{
       dark: isDarkMode,
     }"

@@ -94,7 +94,7 @@ fetchAppVersion();
 <template>
   <ThemeSwitcher @toggle-theme="toggleTheme" :is-dark-mode="isDarkMode">
     <div
-      class="min-h-screen w-screen bg-light dark:bg-dark p-8"
+      class="min-h-screen w-screen relative bg-light dark:bg-dark p-8"
       :class="{
         dark: isDarkMode,
       }"
@@ -128,7 +128,7 @@ fetchAppVersion();
       </div>
 
       <div v-else>
-        <div class="w-full p-2">
+        <div class="w-full p-2 mb-24">
           <Table />
         </div>
       </div>
