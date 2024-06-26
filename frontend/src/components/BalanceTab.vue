@@ -47,7 +47,7 @@ const toggleDropdown = () => {
         v-show="isDropdownOpen"
       >
         <span
-          class="p-2 rounded-md bg-green-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
+          class="p-2 rounded-md bg-green-600 duration-200"
         >
           {{
             $t("total") +
@@ -59,7 +59,7 @@ const toggleDropdown = () => {
         >
 
         <span
-          class="p-2 rounded-md bg-red-600 bg-opacity-50 hover:bg-opacity-100 duration-200"
+          class="p-2 rounded-md bg-red-600 duration-200"
           >{{
             $t("total") +
             " " +
