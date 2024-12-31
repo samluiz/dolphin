@@ -90,10 +90,12 @@ func Migrate(db *sqlx.DB) {
 			log.Fatalf("Failed to execute migration: %v", err)
 		}
 
-		_, err = tx.Exec("INSERT INTO db_version (version) VALUES (?)", fileVersion)
-
-		if err != nil {
-			log.Fatalf("Failed to update migration version: %v", err)
+		if fileVersion != 0 && fileVersion > version {
+			_, err = tx.Exec("INSERT INTO db_version (version) VALUES (?)", fileVersion)
+	
+			if err != nil {
+				log.Fatalf("Failed to update migration version: %v", err)
+			}
 		}
 	}
 
