@@ -25,7 +25,7 @@ import {
   FindAllByProfileID as findAllExpenses,
   Delete as deleteExpense,
 } from "../../wailsjs/go/expense/service";
-import { types } from "../../wailsjs/go/models";
+import { pagination, types } from "../../wailsjs/go/models";
 import ProfileSelector from "./ProfileSelector.vue";
 import { useProfileStore } from "@/stores/ProfileStore";
 import { storeToRefs } from "pinia";
@@ -39,7 +39,7 @@ const profileStore = useProfileStore();
 
 const { profile } = storeToRefs(profileStore);
 
-const earningsPagination = ref<types.PaginationOutput>({
+const earningsPagination = ref<pagination.PaginationOutput>({
   page: 1,
   size: 5,
   total_pages: 1,
@@ -50,7 +50,7 @@ const earningsPagination = ref<types.PaginationOutput>({
   sort_by: "",
 });
 
-const expensesPagination = ref<types.PaginationOutput>({
+const expensesPagination = ref<pagination.PaginationOutput>({
   page: 1,
   size: 5,
   total_pages: 1,

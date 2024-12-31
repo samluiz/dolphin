@@ -2,11 +2,13 @@ package expense
 
 import (
 	t "dolphin/backend/shared/types"
+
+	p "github.com/Saurs-Developers/go-pagination"
 )
 
 type Service interface {
 	FindAll() ([]t.ExpenseOutput, error)
-	FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error)
+	FindAllByProfileID(profileID int, pagination p.Pagination) (p.GenericPaginatedResult, error)
 	FindByID(id int) (t.ExpenseToUpdate, error)
 	Create(e t.ExpenseInput) (t.Expense, error)
 	Update(id int, e t.ExpenseUpdate) (t.Expense, error)
@@ -21,7 +23,7 @@ func (s *service) FindAll() ([]t.ExpenseOutput, error) {
 	return s.r.FindAll()
 }
 
-func (s *service) FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error) {
+func (s *service) FindAllByProfileID(profileID int, pagination p.Pagination) (p.GenericPaginatedResult, error) {
 	return s.r.FindAllByProfileID(profileID, pagination)
 }
 

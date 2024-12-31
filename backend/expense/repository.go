@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"time"
 
+	p "github.com/Saurs-Developers/go-pagination"
 	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
 	FindAll() ([]t.ExpenseOutput, error)
-	FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error)
+	FindAllByProfileID(profileID int, pagination p.Pagination) (p.GenericPaginatedResult, error)
 	FindByID(id int) (t.ExpenseToUpdate, error)
 	Create(e t.ExpenseInput) (t.Expense, error)
 	Update(id int, e t.ExpenseUpdate) (t.Expense, error)
@@ -45,30 +46,30 @@ func (r *repository) FindAll() ([]t.ExpenseOutput, error) {
 	return expenses, nil
 }
 
-func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) (t.PaginatedResult, error) {
+func (r *repository) FindAllByProfileID(profileID int, pagination p.Pagination) (p.GenericPaginatedResult, error) {
 	var expenses []t.ExpenseOutput
 
 	total, err := r.countByProfileID(profileID)
 
 	if err != nil {
-		return t.PaginatedResult{}, err
+		return p.GenericPaginatedResult{}, err
 	}
 
 	dbPagination, err := pagination.GetValues(total)
 
 	if err != nil {
-		return t.PaginatedResult{}, err
+		return p.GenericPaginatedResult{}, err
 	}
 
 	validOrderBys := map[string]bool{"id": true, "description": true, "amount": true, "category": true, "created_at": true, "updated_at": true}
 	validSortBys := map[string]bool{"ASC": true, "DESC": true, "asc": true, "desc": true}
 
 	if !validOrderBys[dbPagination.OrderBy] {
-		return t.PaginatedResult{}, fmt.Errorf("invalid order by value: %s", dbPagination.OrderBy)
+		return p.GenericPaginatedResult{}, fmt.Errorf("invalid order by value: %s", dbPagination.OrderBy)
 	}
 
 	if !validSortBys[dbPagination.SortBy] {
-		return t.PaginatedResult{}, fmt.Errorf("invalid sort by value: %s", dbPagination.SortBy)
+		return p.GenericPaginatedResult{}, fmt.Errorf("invalid sort by value: %s", dbPagination.SortBy)
 	}
 
 	var orderBy string
@@ -101,11 +102,11 @@ func (r *repository) FindAllByProfileID(profileID int, pagination t.Pagination) 
 	err = r.db.Select(&expenses, query, profileID, dbPagination.Limit, dbPagination.Offset)
 
 	if err != nil {
-		return t.PaginatedResult{}, err
+		return p.GenericPaginatedResult{}, err
 	}
 
-	result := t.PaginatedResult{
-		Pagination: t.PaginationOutput{
+	result := p.GenericPaginatedResult{
+		Pagination: p.PaginationOutput{
 			Page:       pagination.Page,
 			Size:       pagination.Size,
 			TotalPages: dbPagination.TotalPages,

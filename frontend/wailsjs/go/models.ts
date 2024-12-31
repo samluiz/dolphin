@@ -1,3 +1,84 @@
+export namespace pagination {
+	
+	export class PaginationOutput {
+	    page: number;
+	    size: number;
+	    total_pages: number;
+	    total_items: number;
+	    next_page: number;
+	    prev_page: number;
+	    order_by: string;
+	    sort_by: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new PaginationOutput(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.page = source["page"];
+	        this.size = source["size"];
+	        this.total_pages = source["total_pages"];
+	        this.total_items = source["total_items"];
+	        this.next_page = source["next_page"];
+	        this.prev_page = source["prev_page"];
+	        this.order_by = source["order_by"];
+	        this.sort_by = source["sort_by"];
+	    }
+	}
+	export class GenericPaginatedResult {
+	    pagination: PaginationOutput;
+	    data: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new GenericPaginatedResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.pagination = this.convertValues(source["pagination"], PaginationOutput);
+	        this.data = source["data"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Pagination {
+	    page: number;
+	    size: number;
+	    order_by: string;
+	    sort_by: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Pagination(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.page = source["page"];
+	        this.size = source["size"];
+	        this.order_by = source["order_by"];
+	        this.sort_by = source["sort_by"];
+	    }
+	}
+
+}
+
 export namespace types {
 	
 	export class Category {
@@ -214,83 +295,6 @@ export namespace types {
 	        this.category_id = source["category_id"];
 	    }
 	}
-	export class PaginationOutput {
-	    page: number;
-	    size: number;
-	    total_pages: number;
-	    total_items: number;
-	    next_page: number;
-	    prev_page: number;
-	    order_by: string;
-	    sort_by: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new PaginationOutput(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.page = source["page"];
-	        this.size = source["size"];
-	        this.total_pages = source["total_pages"];
-	        this.total_items = source["total_items"];
-	        this.next_page = source["next_page"];
-	        this.prev_page = source["prev_page"];
-	        this.order_by = source["order_by"];
-	        this.sort_by = source["sort_by"];
-	    }
-	}
-	export class PaginatedResult {
-	    pagination: PaginationOutput;
-	    data: any;
-	
-	    static createFrom(source: any = {}) {
-	        return new PaginatedResult(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.pagination = this.convertValues(source["pagination"], PaginationOutput);
-	        this.data = source["data"];
-	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
-	export class Pagination {
-	    page: number;
-	    size: number;
-	    order_by: string;
-	    sort_by: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Pagination(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.page = source["page"];
-	        this.size = source["size"];
-	        this.order_by = source["order_by"];
-	        this.sort_by = source["sort_by"];
-	    }
-	}
-	
 	export class Profile {
 	    id: number;
 	    description: string;

@@ -27,22 +27,9 @@ func Connect() (*sqlx.DB, error) {
 
 	db.SetMaxOpenConns(1)
 
-	err = initTables(db)
-
-	if err != nil {
-		return nil, err
-	}
+	Migrate(db)
 
 	return db, nil
-}
-
-func initTables(db *sqlx.DB) error {
-	_, err := db.Exec(schema)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func createAppDir(homeDir string) error {

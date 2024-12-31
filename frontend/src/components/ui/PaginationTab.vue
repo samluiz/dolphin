@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
-import { types } from "wailsjs/go/models";
-import IconButton from "./IconButton.vue";
+import { pagination as p } from "../../../wailsjs/go/models";
 
 const props = defineProps({
-  pagination: Object as () => types.PaginationOutput,
+  pagination: Object as () => p.PaginationOutput,
 });
 
 const { pagination } = toRefs(props);

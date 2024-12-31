@@ -1,7 +1,4 @@
-package db
-
-var schema = `
-	CREATE TABLE IF NOT EXISTS profiles (
+CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT UNIQUE,
     is_default BOOLEAN,
@@ -77,5 +74,3 @@ INSERT INTO categories (description) SELECT 'Home' WHERE NOT EXISTS (SELECT 1 FR
 INSERT INTO categories (description) SELECT 'Shopping' WHERE NOT EXISTS (SELECT 1 FROM categories WHERE description = 'Shopping');
 INSERT INTO categories (description) SELECT 'Investments' WHERE NOT EXISTS (SELECT 1 FROM categories WHERE description = 'Investments');
 INSERT INTO categories (description) SELECT 'Others' WHERE NOT EXISTS (SELECT 1 FROM categories WHERE description = 'Others');
-
-`

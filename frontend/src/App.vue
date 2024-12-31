@@ -99,7 +99,7 @@ fetchAppVersion();
         dark: isDarkMode,
       }"
     >
-      <div class="w-full grid place-items-start p-8">
+      <div class="w-full grid place-items-start p-2">
         <div class="flex items-center gap-4">
           <DolphinIcon />
           <h1 class="text-black dark:text-light-text text-5xl">Dolphin</h1>
