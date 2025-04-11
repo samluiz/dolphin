@@ -424,7 +424,7 @@ const handleSizeChange = (n: number) => {
           <TableData>{{ item.description }}</TableData>
           <TableData>{{ n(item.amount, "currency") }}</TableData>
           <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
-          <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
+          <TableData>{{ d(new Date(item.updated_at), "short") }}</TableData>
           <TableData v-if="selectedTab === Tab.EXPENSE">{{
             t((item as types.ExpenseOutput).category.toLowerCase())
           }}</TableData>
