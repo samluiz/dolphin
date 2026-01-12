@@ -14,7 +14,7 @@ import ProfileSelector from "./components/ProfileSelector.vue";
 import { isUserPortugueseSpeaker } from "./shared/utils";
 import { useI18n } from "vue-i18n";
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 
 const profileStore = useProfileStore();
 
@@ -152,7 +152,7 @@ fetchAppVersion();
                 <p
                   class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-0.5"
                 >
-                  Finance Manager
+                  {{ $t("finance_manager") }}
                 </p>
               </div>
             </div>
@@ -184,7 +184,7 @@ fetchAppVersion();
               <p
                 class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-4"
               >
-                Create your first profile to start tracking finances
+                {{ $t("prompt_profile") }}
               </p>
               <IconButton @click="openCreateProfileModal">
                 <AddIcon />

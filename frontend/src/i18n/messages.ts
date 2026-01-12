@@ -1,5 +1,6 @@
 export const messages = {
   "en-US": {
+    finance_manager: "Finance Manager",
     description: "Description",
     amount: "Amount",
     category: "Category",
@@ -8,6 +9,7 @@ export const messages = {
     earning: "Earning | Earnings",
     expense: "Expense | Expenses",
     profile: "Profile | Profiles",
+    prompt_profile: "Create your first profile to start planning your finances",
     no_profile: "No profiles found. Create one right now!",
     select_profile: "Select profile",
     edit_profile: "Edit profile",
@@ -72,6 +74,7 @@ export const messages = {
     save_settings: "Save Settings",
   },
   "pt-BR": {
+    finance_manager: "Gerenciador de Finanças",
     description: "Descrição",
     amount: "Valor",
     category: "Categoria",
@@ -80,6 +83,8 @@ export const messages = {
     earning: "Receita | Receitas",
     expense: "Despesa | Despesas",
     profile: "Perfil | Perfis",
+    prompt_profile:
+      "Crie seu primeiro perfil para começar a planejar suas finanças",
     no_profile: "Nenhum perfil encontrado. Crie um agora mesmo!",
     select_profile: "Selecionar perfil",
     edit_profile: "Editar perfil",
