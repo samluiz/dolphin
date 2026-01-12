@@ -39,9 +39,13 @@ const profileStore = useProfileStore();
 
 const { profile } = storeToRefs(profileStore);
 
+const itemsPerPage = parseInt(localStorage.getItem("itemsPerPage") || "5");
+
+console.log(itemsPerPage);
+
 const earningsPagination = ref<pagination.PaginationOutput>({
   page: 1,
-  size: 5,
+  size: itemsPerPage,
   total_pages: 1,
   total_items: 1,
   next_page: 1,
@@ -52,7 +56,7 @@ const earningsPagination = ref<pagination.PaginationOutput>({
 
 const expensesPagination = ref<pagination.PaginationOutput>({
   page: 1,
-  size: 5,
+  size: itemsPerPage,
   total_pages: 1,
   total_items: 1,
   next_page: 1,
@@ -316,11 +320,11 @@ const handleSizeChange = (n: number) => {
         v-for="tab in tabs"
         :key="tab"
         @click="handleChangeTab(tab)"
-        class="py-1.5 px-2 duration-200 text-black dark:text-light-text rounded-sm"
+        class="relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-out transform hover:scale-105"
         :class="{
-          'bg-primary dark:bg-secondary bg-opacity-100 text-black dark:text-black':
+          'bg-gradient-ocean text-white shadow-glow-blue':
             selectedTab && selectedTab === tab,
-          'hover:bg-dark dark:hover:bg-light hover:bg-opacity-30 dark:hover:bg-opacity-30':
+          'text-text-primary-light dark:text-text-primary-dark hover:bg-primary-50 dark:hover:bg-surface-dark':
             selectedTab && selectedTab !== tab,
         }"
       >
@@ -329,118 +333,143 @@ const handleSizeChange = (n: number) => {
     </div>
     <div
       class="w-full flex justify-end gap-2 text-sm text-black dark:text-light-text"
-    >
-      <span>{{ t("per_page") }}</span>
-      <div v-for="n in [5, 10]">
-        <span
-          @click="handleSizeChange(n)"
-          class="cursor-pointer text-center w-fit p-0.5 duration-200"
-          :class="{
-            'opacity-30 pointer-events-none':
-              (n === earningsPagination.size && selectedTab === Tab.EARNING) ||
-              (n === expensesPagination.size && selectedTab === Tab.EXPENSE),
-          }"
-        >
-          {{ n }}
-        </span>
-      </div>
-    </div>
+    ></div>
   </div>
 
-  <div v-if="tableData && tableData.length > 0">
-    <table class="min-w-full rounded-lg leading-normal table-fixed">
+  <div
+    v-if="tableData && tableData.length > 0"
+    class="overflow-x-auto rounded-xl border border-border-light dark:border-border-dark shadow-lg-blue"
+  >
+    <table class="w-full bg-white dark:bg-surface-dark">
       <thead>
         <tr class="text-center">
-          <TableHeader
-            >{{ t("description") }}
-            <SortArrowIcon
+          <TableHeader>
+            <button
               @click="sortTableData('description')"
-              :class="{
-                'rotate-180':
-                  (earningsPagination.order_by.toLowerCase() ===
-                    'description' &&
-                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
-                  (expensesPagination.order_by.toLowerCase() ===
-                    'description' &&
-                    expensesPagination.sort_by.toLowerCase() === 'asc'),
-              }"
-          /></TableHeader>
-          <TableHeader
-            >{{ t("amount") }}
-            <SortArrowIcon
+              class="flex items-center gap-1 cursor-pointer hover:text-primary-500 transition-colors"
+            >
+              <span>{{ t("description") }}</span>
+              <span class="text-xs">
+                {{
+                  earningsPagination.order_by.toLowerCase() === "description" ||
+                  expensesPagination.order_by.toLowerCase() === "description"
+                    ? earningsPagination.sort_by.toLowerCase() === "asc" ||
+                      expensesPagination.sort_by.toLowerCase() === "asc"
+                      ? "↑"
+                      : "↓"
+                    : "↕"
+                }}
+              </span>
+            </button>
+          </TableHeader>
+          <TableHeader>
+            <button
               @click="sortTableData('amount')"
-              :class="{
-                'rotate-180':
-                  (earningsPagination.order_by.toLowerCase() === 'amount' &&
-                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
-                  (expensesPagination.order_by.toLowerCase() === 'amount' &&
-                    expensesPagination.sort_by.toLowerCase() === 'asc'),
-              }"
-          /></TableHeader>
-          <TableHeader
-            >{{ t("created") }}
-            <SortArrowIcon
+              class="flex items-center gap-1 cursor-pointer hover:text-primary-500 transition-colors"
+            >
+              <span>{{ t("amount") }}</span>
+              <span class="text-xs">
+                {{
+                  earningsPagination.order_by.toLowerCase() === "amount" ||
+                  expensesPagination.order_by.toLowerCase() === "amount"
+                    ? earningsPagination.sort_by.toLowerCase() === "asc" ||
+                      expensesPagination.sort_by.toLowerCase() === "asc"
+                      ? "↑"
+                      : "↓"
+                    : "↕"
+                }}
+              </span>
+            </button>
+          </TableHeader>
+          <TableHeader>
+            <button
               @click="sortTableData('created_at')"
-              :class="{
-                'rotate-180':
-                  (earningsPagination.order_by.toLowerCase() === 'created_at' &&
-                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
-                  (expensesPagination.order_by.toLowerCase() === 'created_at' &&
-                    expensesPagination.sort_by.toLowerCase() === 'asc'),
-              }"
-          /></TableHeader>
-          <TableHeader
-            >{{ t("updated") }}
-            <SortArrowIcon
+              class="flex items-center gap-1 cursor-pointer hover:text-primary-500 transition-colors"
+            >
+              <span>{{ t("created") }}</span>
+              <span class="text-xs">
+                {{
+                  earningsPagination.order_by.toLowerCase() === "created_at" ||
+                  expensesPagination.order_by.toLowerCase() === "created_at"
+                    ? earningsPagination.sort_by.toLowerCase() === "asc" ||
+                      expensesPagination.sort_by.toLowerCase() === "asc"
+                      ? "↑"
+                      : "↓"
+                    : "↕"
+                }}
+              </span>
+            </button>
+          </TableHeader>
+          <TableHeader>
+            <button
               @click="sortTableData('updated_at')"
-              :class="{
-                'rotate-180':
-                  (earningsPagination.order_by.toLowerCase() === 'updated_at' &&
-                    earningsPagination.sort_by.toLowerCase() === 'asc') ||
-                  (expensesPagination.order_by.toLowerCase() === 'updated_at' &&
-                    expensesPagination.sort_by.toLowerCase() === 'asc'),
-              }"
-          /></TableHeader>
-          <TableHeader v-if="selectedTab === Tab.EXPENSE"
-            >{{ t("category") }}
-            <SortArrowIcon
+              class="flex items-center gap-1 cursor-pointer hover:text-primary-500 transition-colors"
+            >
+              <span>{{ t("updated") }}</span>
+              <span class="text-xs">
+                {{
+                  earningsPagination.order_by.toLowerCase() === "updated_at" ||
+                  expensesPagination.order_by.toLowerCase() === "updated_at"
+                    ? earningsPagination.sort_by.toLowerCase() === "asc" ||
+                      expensesPagination.sort_by.toLowerCase() === "asc"
+                      ? "↑"
+                      : "↓"
+                    : "↕"
+                }}
+              </span>
+            </button>
+          </TableHeader>
+          <TableHeader v-if="selectedTab === Tab.EXPENSE">
+            <button
               @click="sortTableData('category')"
-              :class="{
-                'rotate-180':
-                  expensesPagination.order_by.toLowerCase() === 'category' &&
-                  expensesPagination.sort_by.toLowerCase() === 'asc',
-              }"
-          /></TableHeader>
+              class="flex items-center gap-1 cursor-pointer hover:text-primary-500 transition-colors"
+            >
+              <span>{{ t("category") }}</span>
+              <span class="text-xs">
+                {{
+                  expensesPagination.order_by.toLowerCase() === "category"
+                    ? expensesPagination.sort_by.toLowerCase() === "asc"
+                      ? "↑"
+                      : "↓"
+                    : "↕"
+                }}
+              </span>
+            </button>
+          </TableHeader>
           <TableHeader v-else></TableHeader>
           <TableHeader></TableHeader>
         </tr>
       </thead>
       <tbody>
         <tr
-          class="text-center odd:bg-[#F2F2F2] even:bg-[#e0e0e0] dark:odd:bg-[#404040] dark:even:bg-[#252525] text-black dark:text-light-text"
+          class="text-center transition-all duration-200 ease-out hover:bg-primary-50 dark:hover:bg-surface-dark/50 odd:bg-white even:bg-gray-50/50 dark:odd:bg-surface-dark dark:even:bg-bg-dark/50 group"
           v-for="item in tableData"
           :key="item.id"
         >
           <TableData>{{ item.description }}</TableData>
-          <TableData>{{ n(item.amount, "currency") }}</TableData>
+          <TableData>
+            <span class="font-semibold text-primary-600 dark:text-primary-400">
+              {{ n(item.amount, "currency") }}
+            </span>
+          </TableData>
           <TableData>{{ d(new Date(item.created_at), "short") }}</TableData>
           <TableData>{{ d(new Date(item.updated_at), "short") }}</TableData>
-          <TableData v-if="selectedTab === Tab.EXPENSE">{{
-            t((item as types.ExpenseOutput).category.toLowerCase())
-          }}</TableData>
+          <TableData v-if="selectedTab === Tab.EXPENSE">
+            <span
+              class="px-2 py-1 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
+            >
+              {{ t((item as types.ExpenseOutput).category.toLowerCase()) }}
+            </span>
+          </TableData>
           <TableData v-else></TableData>
-          <TableData class="flex flex-row justify-end">
-            <div class="flex flex-row justify-evenly w-20">
-              <IconButton
-                class="text-black dark:text-light-text"
-                @click="openEditModal(item.id)"
-              >
+          <TableData>
+            <div
+              class="flex flex-row justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              <IconButton @click="openEditModal(item.id)">
                 <EditIcon />
               </IconButton>
-              <IconButton
-                class="text-black dark:text-light-text"
-                @click="openDeleteTableDataModal(item.id)"
-              >
+              <IconButton @click="openDeleteTableDataModal(item.id)">
                 <DeleteIcon />
               </IconButton>
             </div>

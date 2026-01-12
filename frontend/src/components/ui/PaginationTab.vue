@@ -39,38 +39,53 @@ const visiblePages = computed(() => {
 </script>
 
 <template>
-  <div class="flex justify-center gap-2 text-sm">
+  <div class="flex items-center gap-1">
+    <!-- Previous button -->
     <button
       @click="handlePageChange(pagination!.page - 1)"
-      class="px-2 text-black dark:text-light-text duration-200"
+      class="p-2 rounded-lg
+             text-text-primary-light dark:text-text-primary-dark
+             hover:bg-primary-50 dark:hover:bg-surface-dark
+             disabled:opacity-30 disabled:cursor-not-allowed
+             transition-all duration-200 ease-out
+             transform hover:scale-110 active:scale-95"
       :disabled="pagination && pagination.prev_page === 0"
-      :class="{
-        'opacity-30': pagination && pagination.prev_page === 0,
-      }"
     >
-      &lt;
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
     </button>
+
+    <!-- Page numbers -->
     <button
       v-for="page in visiblePages"
       :key="page"
       @click="handlePageChange(page)"
-      class="px-2 text-black dark:text-light-text rounded-lg duration-200"
+      class="min-w-[2.5rem] px-3 py-2 rounded-lg font-medium text-sm
+             transition-all duration-200 ease-out
+             transform hover:scale-110 active:scale-95"
       :class="{
-        'opacity-30 pointer-events-none':
-          pagination && pagination.page === page,
+        'bg-gradient-ocean text-white shadow-md-blue': pagination && pagination.page === page,
+        'text-text-primary-light dark:text-text-primary-dark hover:bg-primary-50 dark:hover:bg-surface-dark': pagination && pagination.page !== page,
       }"
     >
       {{ page }}
     </button>
+
+    <!-- Next button -->
     <button
       @click="handlePageChange(pagination!.page + 1)"
-      class="px-2 text-black dark:text-light-text rounded-lg duration-200"
+      class="p-2 rounded-lg
+             text-text-primary-light dark:text-text-primary-dark
+             hover:bg-primary-50 dark:hover:bg-surface-dark
+             disabled:opacity-30 disabled:cursor-not-allowed
+             transition-all duration-200 ease-out
+             transform hover:scale-110 active:scale-95"
       :disabled="pagination && pagination.next_page === 0"
-      :class="{
-        'opacity-30': pagination && pagination.next_page === 0,
-      }"
     >
-      &gt;
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
     </button>
   </div>
 </template>

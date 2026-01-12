@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 
 interface Props {
   name: string;
@@ -10,23 +10,43 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const isFocused = ref(false);
 </script>
 
 <template>
-  <div class="flex flex-col justify-start items-center gap-2">
-    <label class="w-full text-sm text-black dark:text-light-text" :for="name">{{
-      title
-    }}</label>
+  <div class="relative w-full">
     <input
-      class="w-full p-1 rounded-sm shadow-lg text-light-text bg-secondary dark:text-black dark:bg-primary border-0 appearance-none outline-none focus:ring-1"
+      class="peer w-full px-4 py-3 rounded-lg
+             bg-white dark:bg-surface-dark
+             border-2 border-border-light dark:border-border-dark
+             text-text-primary-light dark:text-text-primary-dark
+             placeholder-transparent
+             focus:border-primary-500 dark:focus:border-primary-400
+             focus:ring-4 focus:ring-primary-100 dark:focus:ring-primary-900/30
+             transition-all duration-200 ease-out
+             shadow-sm focus:shadow-md-blue"
       :required="required"
       :type="type"
       :id="name"
       :value="modelValue"
+      :placeholder="title"
       step="0.01"
-      @input="
-        $emit('update:modelValue', ($event.target as HTMLInputElement)?.value)
-      "
+      @focus="isFocused = true"
+      @blur="isFocused = false"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement)?.value)"
     />
+    <label
+      :for="name"
+      class="absolute left-4 -top-2.5 px-1
+             text-sm font-medium
+             text-text-secondary-light dark:text-text-secondary-dark
+             bg-white dark:bg-surface-dark
+             transition-all duration-200 ease-out
+             peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-placeholder-shown:text-text-secondary-light/60
+             peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-primary-500 dark:peer-focus:text-primary-400"
+    >
+      {{ title }}
+    </label>
   </div>
 </template>

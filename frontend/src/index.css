@@ -28,10 +28,113 @@
   html,
   body {
     height: 100vh;
-    color: light-dark(#000, #fff);
     font-family: "sunflower", sans-serif;
-    background-color: light-dark(#eaeaea, #1c1c1c);
     font-weight: 300;
     -webkit-font-smoothing: antialiased !important;
+  }
+
+  /* Light mode - ocean mist background */
+  html:not(.dark) body {
+    color: #0a3d91;
+    background: linear-gradient(180deg, #e3f2fd 0%, #f5f9ff 100%);
+  }
+
+  /* Dark mode - deep ocean background */
+  html.dark body {
+    color: #e3f2fd;
+    background: linear-gradient(180deg, #0d1520 0%, #1a2332 100%);
+  }
+
+  /* Smooth scroll */
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Glass morphism utility */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .dark .glass {
+    background: rgba(26, 35, 50, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Card with depth */
+  .card {
+    @apply bg-white dark:bg-surface-dark rounded-xl shadow-lg-blue;
+    @apply border border-border-light/30 dark:border-border-dark/30;
+    transition: all 0.3s ease;
+  }
+
+  .modal-open #app {
+    pointer-events: none;
+  }
+
+  .card:hover {
+    @apply shadow-xl-blue;
+    transform: translateY(-2px);
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent;
+  }
+
+  /* Shimmer animation for loading states */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-400 ring-offset-2 ring-offset-white dark:ring-offset-surface-dark;
+  }
+
+  /* Blob animation keyframes */
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 }

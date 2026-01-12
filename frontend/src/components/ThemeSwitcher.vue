@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
-import LightModeIcon from "./ui/icons/LightModeIcon.vue";
-import DarkModeIcon from "./ui/icons/DarkModeIcon.vue";
+import { toRefs, watch } from "vue";
 
 const props = defineProps({
   isDarkMode: Boolean,
@@ -10,35 +8,16 @@ const props = defineProps({
 const emits = defineEmits(["toggle-theme"]);
 
 const { isDarkMode } = toRefs(props);
+
+watch(
+  () => props.isDarkMode,
+  (newVal) => {
+    document.documentElement.classList.toggle("dark", newVal);
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
-  <div
-    class="absolute duration-200 top-8 right-8 z-50"
-    :class="{
-      dark: isDarkMode,
-    }"
-  >
-    <button
-      @click="$emit('toggle-theme')"
-      class="p-2 text-black dark:text-light-text rounded-lg"
-    >
-      <transition name="icon-fade" mode="out-in">
-        <span v-if="isDarkMode" key="dark"><LightModeIcon /></span>
-        <span v-else key="light"><DarkModeIcon /></span>
-      </transition>
-    </button>
-  </div>
   <slot></slot>
 </template>
-
-<style scoped>
-.icon-fade-enter-active,
-.icon-fade-leave-active {
-  transition: opacity 0.2s ease-out;
-}
-.icon-fade-enter,
-.icon-fade-leave-to {
-  opacity: 0;
-}
-</style>
